@@ -1,9 +1,14 @@
 package com.abe.robert.timesink;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -43,15 +48,6 @@ public class MainActivity extends AppCompatActivity {
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
         bSink = (Button) findViewById(R.id.b_Sink);
 
-
-        // temporary
-        tvMinutes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOut();
-            }
-        });
-
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -89,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        signOut();
+    }
+
     private void signOut() {
 
         // Firebase sign out
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 Auth.GoogleSignInApi.signOut(LoginActivity.mGoogleApiClient).setResultCallback(
                         new ResultCallback<Status>() {
                             @Override
-                            public void onResult(Status status) {
+                            public void onResult(@NonNull Status status) {
                                 finish();
                                 // Get sign out result
                             }
@@ -113,5 +115,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onConnectionSuspended(int i) {}
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                signOut();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
