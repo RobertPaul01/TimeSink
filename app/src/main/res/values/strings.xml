@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Time Sink</string>
+    <string name="sign_in">Sign In</string>
+    <string name="timeAvailable">How much time do you have?</string>
 </resources>
