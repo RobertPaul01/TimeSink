@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -68,8 +67,9 @@ public class MainActivity extends AppCompatActivity {
         bSink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "go make this work", Toast.LENGTH_SHORT).show();
-                // TODO start activity for finding content
+                //Toast.makeText(MainActivity.this, "go make this work", Toast.LENGTH_SHORT).show();
+                // TODO: start activity for finding content
+                startActivity(new Intent(MainActivity.this, ContentActivity.class));
             }
         });
 

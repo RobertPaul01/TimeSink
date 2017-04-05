@@ -2,7 +2,6 @@ package com.abe.robert.timesink;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -116,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements
                 firebaseAuthWithGoogle(account);
             } else {
                 // sign in failed
-                Log.e(TAG, "google sign-in failed");
+                Log.e(TAG, "google sign-in failed, might be SHA1 key if app is unsigned");
             }
         }
     }
@@ -137,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                         } else {
+                            Log.d(TAG, "signInSuccess");
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     }
