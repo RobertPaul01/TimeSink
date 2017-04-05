@@ -69,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Toast.makeText(MainActivity.this, "go make this work", Toast.LENGTH_SHORT).show();
                 // TODO: start activity for finding content
-                startActivity(new Intent(MainActivity.this, ContentActivity.class));
+                Intent i = new Intent(MainActivity.this, ContentActivity.class);
+                i.putExtra("CONTENT_TIME", tvMinutes.getText());
+                startActivity(i);
             }
         });
 
