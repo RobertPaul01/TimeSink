@@ -83,6 +83,9 @@ public class LoginActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
+                if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+
+                }
                 signIn();
                 break;
         }
