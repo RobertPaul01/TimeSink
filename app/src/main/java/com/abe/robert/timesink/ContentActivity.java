@@ -1,9 +1,17 @@
 package com.abe.robert.timesink;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -34,7 +42,6 @@ public class ContentActivity extends YouTubeBaseActivity implements YouTubePlaye
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_content);
-
         // Catch the content time from MainActivity intent
         Bundle b = getIntent().getExtras();
         if (b != null) {

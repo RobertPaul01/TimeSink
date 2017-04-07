@@ -1,11 +1,14 @@
 package com.abe.robert.timesink;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, ContentActivity.class);
                 i.putExtra("CONTENT_TIME", tvMinutes.getText());
                 startActivity(i);
+//                overridePendingTransition(R.transition.fadein, R.transition.fadeout);
+
             }
         });
 
