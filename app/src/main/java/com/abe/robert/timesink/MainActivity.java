@@ -24,6 +24,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    // static intent keys
+    public static final String CONTENT_TIME = "CONTENT_TIME";
+
+    // constant private strings
     private final String TAG = "MainActivity.java";
     private final String SERVER_CLIENT_ID = "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com";
 
@@ -41,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 //Toast.makeText(MainActivity.this, "go make this work", Toast.LENGTH_SHORT).show();
                 // TODO: start activity for finding content
                 Intent i = new Intent(MainActivity.this, ContentActivity.class);
-                i.putExtra("CONTENT_TIME", tvMinutes.getText());
+                i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 startActivity(i);
             }
         });
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        signOut();
+        //signOut();
     }
 
     private void signOut() {
@@ -136,4 +139,5 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

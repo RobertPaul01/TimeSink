@@ -18,19 +18,29 @@ android {
         }
     }
 }
-
+repositories {
+    mavenCentral()
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Google Play services Auth split
+    compile 'com.google.android.gms:play-services-auth:10.2.1'
+
+    // Youtube
     compile files('libs/YouTubeAndroidPlayerApi.jar')
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'
+
+    // Firebase
     compile 'com.google.android.gms:play-services-auth:10.2.1'
     compile 'com.google.firebase:firebase-auth:10.2.1'
+
+    // Android
+    compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     testCompile 'junit:junit:4.12'
 
 }
-
-
-
 
 apply plugin: 'com.google.gms.google-services'
