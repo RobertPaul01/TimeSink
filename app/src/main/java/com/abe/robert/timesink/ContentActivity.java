@@ -3,6 +3,12 @@ package com.abe.robert.timesink;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -20,6 +26,9 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
 
     private static final String TAG = "ContentActivity.java";
+
+    // From www.console.developers.google.com
+    public static final String YOUTUBE_API_KEY = "AIzaSyDp0k5y9Ru1GU7ftvlQ3jCVaxJjRQqmcWs";
 
     // Duration of content to display
     private int contentTime;
@@ -58,5 +67,4 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
         Toast.makeText(ContentActivity.this, "Youtube initialization failure!! " + youTubeInitializationResult, Toast.LENGTH_LONG).show();
     }
-
 }

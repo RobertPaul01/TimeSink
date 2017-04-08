@@ -8,4 +8,34 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="animated_content" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/left_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/right_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/right_out</item>
+    </style>
+
+    <style name="Content_Theme" parent="@style/AppTheme">
+        <item name="android:windowAnimationStyle">@style/animated_content</item>
+    </style>
+
+    <style name="animated_main" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/up_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/up_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/right_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/right_out</item>
+    </style>
+
+    <style name="Main_Theme" parent="@style/AppTheme">
+        <item name="android:windowAnimationStyle">@style/animated_main</item>
+    </style>
+
+    <style name="animated_login" parent="@android:style/Animation.Activity">
+        <item name="android:activityCloseEnterAnimation">@anim/up_in</item>
+    </style>
+
+    <style name="Login_Theme" parent="@style/AppTheme">
+        <item name="android:windowAnimationStyle">@style/animated_login</item>
+    </style>
+
 </resources>

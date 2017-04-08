@@ -26,7 +26,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
-    private static final String TAG = "SignInActivity";
+    private static final String TAG = "SignInActivity.java";
     private static final int RC_SIGN_IN = 9001;
 
     private final String SERVER_CLIENT_ID = "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com";
@@ -85,6 +85,9 @@ public class LoginActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
+                if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+
+                }
                 signIn();
                 break;
         }
