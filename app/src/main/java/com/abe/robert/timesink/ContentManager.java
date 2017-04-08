@@ -30,6 +30,7 @@ public class ContentManager {
 
     // From Google developer console
     public static final String YOUTUBE_API_KEY = "AIzaSyDp0k5y9Ru1GU7ftvlQ3jCVaxJjRQqmcWs";
+    private static final String TAG = "ContentManager.java";
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
 
