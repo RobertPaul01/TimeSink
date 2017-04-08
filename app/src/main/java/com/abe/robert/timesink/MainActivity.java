@@ -1,11 +1,14 @@
 package com.abe.robert.timesink;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String CONTENT_TIME = "CONTENT_TIME";
 
     // constant private strings
-    private final String TAG = "MainActivity.java";
+    private static final String TAG = "MainActivity.java";
     private final String SERVER_CLIENT_ID = "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com";
 
     // layout variables
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                String minutes = "" + i;
+                String minutes = "" + (i + 1); // SeekBar has an unchangeable minimum of 0, I want 1.
                 tvMinutes.setText(minutes);
             }
 
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, ContentActivity.class);
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 startActivity(i);
+//                overridePendingTransition(R.transition.fadein, R.transition.fadeout);
+
             }
         });
 
