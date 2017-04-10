@@ -5,4 +5,11 @@
     <string name="tv_sign_in">Sign In</string>
     <string name="sink">Sink!</string>
     <string name="sign_out">Sign Out</string>
+    <string name="checkbox1">Music Videos</string>
+    <string name="checkbox2">Cats</string>
+    <string name="checkbox3">pranks</string>
+    <string name="checkbox4">Dogs</string>
+    <string name="checkbox5">Science Experiments</string>
+    <string name="checkbox6">Painting</string>
+    <string name="interests">Interests</string>
 </resources>

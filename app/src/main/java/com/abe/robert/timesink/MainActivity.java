@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -23,6 +24,9 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private TextView tvMinutes;
     private Button bSink;
+    private CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6;
 
     // Firebase variables
     FirebaseAuth mFirebaseAuth;
@@ -52,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
         bSink = (Button) findViewById(R.id.b_Sink);
+        checkBox1 = (CheckBox) findViewById(R.id.checkBox1);
+        checkBox2 = (CheckBox) findViewById(R.id.checkBox2);
+        checkBox3 = (CheckBox) findViewById(R.id.checkBox3);
+        checkBox4 = (CheckBox) findViewById(R.id.checkBox4);
+        checkBox5 = (CheckBox) findViewById(R.id.checkBox5);
+        checkBox6 = (CheckBox) findViewById(R.id.checkBox6);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -145,4 +156,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * The list of checkboxes that are checked on the UI
+     *
+     * @return null if nothing is checked, otherwise the list of checked boxes
+     */
+    public List<String> getChecked() {
+        List<String> list = new ArrayList<String>();
+        if (checkBox1.isChecked()) list.add(checkBox1.getText().toString());
+        if (checkBox2.isChecked()) list.add(checkBox2.getText().toString());
+        if (checkBox3.isChecked()) list.add(checkBox3.getText().toString());
+        if (checkBox4.isChecked()) list.add(checkBox4.getText().toString());
+        if (checkBox5.isChecked()) list.add(checkBox5.getText().toString());
+        if (checkBox6.isChecked()) list.add(checkBox6.getText().toString());
+
+        return (list.get(0) == null) ? null : list;
+    }
+
 }
+
