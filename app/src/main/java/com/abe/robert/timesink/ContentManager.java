@@ -12,7 +12,6 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by Robby on 4/7/17.
@@ -29,23 +27,33 @@ import java.util.Properties;
 public class ContentManager {
 
     // From Google developer console
-    public static final String YOUTUBE_API_KEY = "AIzaSyDp0k5y9Ru1GU7ftvlQ3jCVaxJjRQqmcWs";
-    private static final String TAG = "ContentManager.java";
+    public static final String YOUTUBE_API_KEY = "***REMOVED***";
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
 
     private static ContentManager instance;
+    private static String token;
 
     private YouTube youtube;
 
     private ContentManager() {
-        new YouTubeQuery().execute();
     }
 
     public static ContentManager getInstance() {
         if (instance == null)
             instance = new ContentManager();
         return instance;
+    }
+
+    public static ContentManager getInstance(String token) {
+        ContentManager.token = token;
+        if (instance == null)
+            instance = new ContentManager();
+        return instance;
+    }
+
+    public void makeQuery() {
+        new YouTubeQuery().execute();
     }
 
     /*
@@ -57,7 +65,6 @@ public class ContentManager {
      * @param query Search query (String)
      */
     private static void prettyPrint(Iterator<Video> iteratorSearchResults, String query) {
-
         Log.d("YouTubeQuery", "\n=============================================================");
         Log.d("YouTubeQuery", "   First " + NUMBER_OF_VIDEOS_RETURNED + " videos for search on \"" + query + "\".");
         Log.d("YouTubeQuery", "=============================================================\n");
@@ -67,31 +74,24 @@ public class ContentManager {
         }
 
         while (iteratorSearchResults.hasNext()) {
-
             Video singleVideo = iteratorSearchResults.next();
             String rId = singleVideo.getId();
 
-            // Confirm that the result represents a video. Otherwise, the
-            // item will not contain a video ID.
-            //if (rId.getKind().equals("youtube#video")) {
-                Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-
-                Log.d("YouTubeQuery", " Video Id" + rId);
-                Log.d("YouTubeQuery", " Title: " + singleVideo.getSnippet().getTitle());
-                Log.d("YouTubeQuery", " Description: " + singleVideo.getSnippet().getDescription());
-                Log.d("YouTubeQuery", " Duration: " + singleVideo.getContentDetails().getDuration());
-                Log.d("YouTubeQuery", "\n-------------------------------------------------------------\n");
-            //}
+            Log.d("YouTubeQuery", " Video Id" + rId);
+            Log.d("YouTubeQuery", " Title: " + singleVideo.getSnippet().getTitle());
+            Log.d("YouTubeQuery", " Description: " + singleVideo.getSnippet().getDescription());
+            Log.d("YouTubeQuery", " Duration: " + singleVideo.getContentDetails().getDuration());
+            Log.d("YouTubeQuery", "\n-------------------------------------------------------------\n");
         }
     }
 
     private class YouTubeQuery extends AsyncTask<String, Void, String> {
 
+        public YouTubeQuery() {
+        }
+
         @Override
         protected String doInBackground(String... params) {
-            // Read the developer key from the properties file.
-            Properties properties = new Properties();
-            properties.setProperty("youtube.apikey", YOUTUBE_API_KEY);
 
             try {
                 // This object is used to make YouTube Data API requests. The last
@@ -101,7 +101,7 @@ public class ContentManager {
                 youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
-                }).setApplicationName("TimeSink").build();
+                }).setApplicationName("time-sink-94a21").build();
 
                 // Define the API request for retrieving search results.
                 YouTube.Search.List search = youtube.search().list("id,snippet");
@@ -109,8 +109,8 @@ public class ContentManager {
                 // Set your developer key from the {{ Google Cloud Console }} for
                 // non-authenticated requests. See:
                 // {{ https://cloud.google.com/console }}
-                String apiKey = properties.getProperty("youtube.apikey");
-                search.setKey(YOUTUBE_API_KEY);
+                search.setOauthToken(ContentManager.token);
+                search.set("key", YOUTUBE_API_KEY);
 
                 String query = "Education";
 
