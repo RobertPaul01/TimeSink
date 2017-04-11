@@ -1,14 +1,11 @@
 package com.abe.robert.timesink;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.Slide;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,9 +21,15 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -47,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
     // Firebase variables
     FirebaseAuth mFirebaseAuth;
     FirebaseUser mFirebaseUser;
-    String mUsername;
+    DatabaseReference mFirebaseDatabase;
+    private String mFireBaseUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 // TODO: start activity for finding content
                 Intent i = new Intent(MainActivity.this, ContentActivity.class);
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
+                saveCheckBoxesToDatabase();
                 startActivity(i);
 //                overridePendingTransition(R.transition.fadein, R.transition.fadeout);
 
@@ -97,12 +102,18 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance().getReference();
+
         if(mFirebaseUser == null) {
             // Not signed in, launch the sign in activity
             finish();
         } else {
-            mUsername = mFirebaseUser.getDisplayName();
+            mFireBaseUserId = mFirebaseAuth.getCurrentUser().getUid();
+
         }
+
+        preLoadCheckBoxesFromDatabase();
     }
 
 
@@ -127,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         new ResultCallback<Status>() {
                             @Override
                             public void onResult(@NonNull Status status) {
+                                saveCheckBoxesToDatabase();
                                 finish();
                                 // Get sign out result
                             }
@@ -149,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sign_out_menu:
+                saveCheckBoxesToDatabase();
                 signOut();
                 return true;
             default:
@@ -162,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
      * @return null if nothing is checked, otherwise the list of checked boxes
      */
     public List<String> getChecked() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         if (checkBox1.isChecked()) list.add(checkBox1.getText().toString());
         if (checkBox2.isChecked()) list.add(checkBox2.getText().toString());
         if (checkBox3.isChecked()) list.add(checkBox3.getText().toString());
@@ -171,6 +184,52 @@ public class MainActivity extends AppCompatActivity {
         if (checkBox6.isChecked()) list.add(checkBox6.getText().toString());
 
         return (list.get(0) == null) ? null : list;
+    }
+
+    /*
+     * loads whether the checkboxes should start checked or unchecked based on the database info
+     */
+    private void preLoadCheckBoxesFromDatabase() {
+        mFirebaseDatabase.child("users").child(mFireBaseUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    Log.d("on_child1", ""+ Boolean.parseBoolean(String.valueOf(map.get("checkbox1"))));
+                    Log.d("on_child_minutes", String.valueOf(map.get("minutes")));
+
+                    checkBox1.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox1"))));
+                    checkBox2.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox2"))));
+                    checkBox3.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox3"))));
+                    checkBox4.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox4"))));
+                    checkBox5.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox5"))));
+                    checkBox6.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox6"))));
+                    tvMinutes.setText(String.valueOf(map.get("minutes")));
+                    seekBar.setProgress(Integer.parseInt(String.valueOf(map.get("minutes")))-1);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /*
+     * saves the checkboxes states to the database
+     */
+    private void saveCheckBoxesToDatabase() {
+        User user = new User(checkBox1.isChecked(), checkBox2.isChecked(), checkBox3.isChecked(),
+                checkBox4.isChecked(), checkBox5.isChecked(), checkBox6.isChecked(), Integer.parseInt(tvMinutes.getText().toString()));
+
+        mFirebaseDatabase.child("users").child(mFireBaseUserId).setValue(user);
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveCheckBoxesToDatabase();
+        finish();
     }
 
 }
