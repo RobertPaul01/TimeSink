@@ -1,10 +1,6 @@
 package com.abe.robert.timesink;
 
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -62,17 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AccountManager am = AccountManager.get(this);
-        Bundle options = new Bundle();
-
-        // This call will need to be changed or removed
-//        am.getAuthToken(
-//                am.getAccounts()[0],        // Account retrieved using getAccountsByType()
-//                "Youtube",                  // Auth scope
-//                options,                    // Authenticator-specific options
-//                this,                       // Your activity
-//                new OnTokenAcquired(),      // Callback called when a token is successfully acquired
-//                new Handler());             // Callback called if an error occurs
+        ContentManager.getInstance().makeQuery();
 
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
@@ -206,25 +192,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 startActivity(i);
                 break;
-        }
-    }
-
-    private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
-        @Override
-        public void run(AccountManagerFuture<Bundle> result) {
-            // Get the result of the operation from the AccountManagerFuture.
-            Bundle bundle = null;
-            try {
-                bundle = result.getResult();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // The token is a named value in the bundle. The name of the value
-            // is stored in the constant AccountManager.KEY_AUTHTOKEN.
-            String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-            Log.i(TAG, "Token is: " + token);
-            ContentManager.getInstance(token).makeQuery();
         }
     }
 
