@@ -1,11 +1,8 @@
 package com.abe.robert.timesink;
 
-<<<<<<< HEAD
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-=======
->>>>>>> origin/master
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -114,29 +111,26 @@ public class MainActivity extends AppCompatActivity {
                 saveCheckBoxesToDatabase();
                 startActivity(i);
 //                overridePendingTransition(R.transition.fadein, R.transition.fadeout);
-
             }
         });
 
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-<<<<<<< HEAD
         if (mFirebaseUser == null) {
-=======
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance().getReference();
+            mFirebaseDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if(mFirebaseUser == null) {
->>>>>>> origin/master
-            // Not signed in, launch the sign in activity
-            finish();
-        } else {
-            mFireBaseUserId = mFirebaseAuth.getCurrentUser().getUid();
+            if (mFirebaseUser == null) {
+                // Not signed in, launch the sign in activity
+                finish();
+            } else {
+                mFireBaseUserId = mFirebaseAuth.getCurrentUser().getUid();
 
+            }
+
+            preLoadCheckBoxesFromDatabase();
         }
-
-        preLoadCheckBoxesFromDatabase();
     }
 
     private void signOut() {
@@ -203,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
         return (list.get(0) == null) ? null : list;
     }
 
-<<<<<<< HEAD
     private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
         @Override
         public void run(AccountManagerFuture<Bundle> result) {
@@ -222,8 +215,7 @@ public class MainActivity extends AppCompatActivity {
             ContentManager.getInstance(token).makeQuery();
         }
     }
-    
-=======
+
     /*
      * loads whether the checkboxes should start checked or unchecked based on the database info
      */
@@ -270,6 +262,5 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
->>>>>>> origin/master
 }
 
