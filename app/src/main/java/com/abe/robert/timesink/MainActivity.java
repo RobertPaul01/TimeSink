@@ -1,14 +1,15 @@
 package com.abe.robert.timesink;
 
-import android.app.ActivityOptions;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.Slide;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,7 +54,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
+        AccountManager am = AccountManager.get(this);
+        Bundle options = new Bundle();
+
+        // This call will need to be changed or removed
+        am.getAuthToken(
+                am.getAccounts()[0],        // Account retrieved using getAccountsByType()
+                "Youtube",                  // Auth scope
+                options,                    // Authenticator-specific options
+                this,                       // Your activity
+                new OnTokenAcquired(),      // Callback called when a token is successfully acquired
+                new Handler());             // Callback called if an error occurs
+
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
         bSink = (Button) findViewById(R.id.b_Sink);
@@ -97,19 +110,12 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if(mFirebaseUser == null) {
+        if (mFirebaseUser == null) {
             // Not signed in, launch the sign in activity
             finish();
         } else {
             mUsername = mFirebaseUser.getDisplayName();
         }
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //signOut();
     }
 
     private void signOut() {
@@ -134,7 +140,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onConnectionSuspended(int i) {}
+            public void onConnectionSuspended(int i) {
+            }
         });
     }
 
@@ -173,5 +180,24 @@ public class MainActivity extends AppCompatActivity {
         return (list.get(0) == null) ? null : list;
     }
 
+    private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
+        @Override
+        public void run(AccountManagerFuture<Bundle> result) {
+            // Get the result of the operation from the AccountManagerFuture.
+            Bundle bundle = null;
+            try {
+                bundle = result.getResult();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // The token is a named value in the bundle. The name of the value
+            // is stored in the constant AccountManager.KEY_AUTHTOKEN.
+            String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+            Log.i(TAG, "Token is: " + token);
+            ContentManager.getInstance(token).makeQuery();
+        }
+    }
+    
 }
 

@@ -44,8 +44,6 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ContentManager.getInstance();
-
         // Assign fields
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
 
