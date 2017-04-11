@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     // static intent keys
     public static final String CONTENT_TIME = "CONTENT_TIME";
@@ -66,23 +66,32 @@ public class MainActivity extends AppCompatActivity {
         Bundle options = new Bundle();
 
         // This call will need to be changed or removed
-        am.getAuthToken(
-                am.getAccounts()[0],        // Account retrieved using getAccountsByType()
-                "Youtube",                  // Auth scope
-                options,                    // Authenticator-specific options
-                this,                       // Your activity
-                new OnTokenAcquired(),      // Callback called when a token is successfully acquired
-                new Handler());             // Callback called if an error occurs
+//        am.getAuthToken(
+//                am.getAccounts()[0],        // Account retrieved using getAccountsByType()
+//                "Youtube",                  // Auth scope
+//                options,                    // Authenticator-specific options
+//                this,                       // Your activity
+//                new OnTokenAcquired(),      // Callback called when a token is successfully acquired
+//                new Handler());             // Callback called if an error occurs
 
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
+
         bSink = (Button) findViewById(R.id.b_Sink);
+        bSink.setOnClickListener(this);
+
         checkBox1 = (CheckBox) findViewById(R.id.checkBox1);
         checkBox2 = (CheckBox) findViewById(R.id.checkBox2);
         checkBox3 = (CheckBox) findViewById(R.id.checkBox3);
         checkBox4 = (CheckBox) findViewById(R.id.checkBox4);
         checkBox5 = (CheckBox) findViewById(R.id.checkBox5);
         checkBox6 = (CheckBox) findViewById(R.id.checkBox6);
+        checkBox1.setOnClickListener(this);
+        checkBox2.setOnClickListener(this);
+        checkBox3.setOnClickListener(this);
+        checkBox4.setOnClickListener(this);
+        checkBox5.setOnClickListener(this);
+        checkBox6.setOnClickListener(this);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -98,37 +107,21 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        bSink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(MainActivity.this, "go make this work", Toast.LENGTH_SHORT).show();
-                // TODO: start activity for finding content
-                Intent i = new Intent(MainActivity.this, ContentActivity.class);
-                i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 saveCheckBoxesToDatabase();
-                startActivity(i);
-//                overridePendingTransition(R.transition.fadein, R.transition.fadeout);
             }
         });
+        bSink.setOnClickListener(this);
 
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
         if (mFirebaseUser == null) {
-
+            // Not signed in, launch the sign in activity
+            finish();
+        } else {
             mFirebaseDatabase = FirebaseDatabase.getInstance().getReference();
-
-            if (mFirebaseUser == null) {
-                // Not signed in, launch the sign in activity
-                finish();
-            } else {
-                mFireBaseUserId = mFirebaseAuth.getCurrentUser().getUid();
-
-            }
-
+            mFireBaseUserId = mFirebaseAuth.getCurrentUser().getUid();
             preLoadCheckBoxesFromDatabase();
         }
     }
@@ -172,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sign_out_menu:
-                saveCheckBoxesToDatabase();
                 signOut();
                 return true;
             default:
@@ -195,6 +187,26 @@ public class MainActivity extends AppCompatActivity {
         if (checkBox6.isChecked()) list.add(checkBox6.getText().toString());
 
         return (list.get(0) == null) ? null : list;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.checkBox1:
+            case R.id.checkBox2:
+            case R.id.checkBox3:
+            case R.id.checkBox4:
+            case R.id.checkBox5:
+            case R.id.checkBox6:
+                saveCheckBoxesToDatabase();
+                break;
+            case R.id.b_Sink:
+                // TODO: start activity for finding content
+                Intent i = new Intent(MainActivity.this, ContentActivity.class);
+                i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
+                startActivity(i);
+                break;
+        }
     }
 
     private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
@@ -250,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
      * saves the checkboxes states to the database
      */
     private void saveCheckBoxesToDatabase() {
+        Log.d(TAG, "Saved to database");
         User user = new User(checkBox1.isChecked(), checkBox2.isChecked(), checkBox3.isChecked(),
                 checkBox4.isChecked(), checkBox5.isChecked(), checkBox6.isChecked(), Integer.parseInt(tvMinutes.getText().toString()));
 
