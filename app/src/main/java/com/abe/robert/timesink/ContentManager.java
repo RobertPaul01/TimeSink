@@ -10,6 +10,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
@@ -32,7 +33,6 @@ public class ContentManager {
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
 
     private static ContentManager instance;
-    private static String token;
 
     private YouTube youtube;
 
@@ -45,54 +45,19 @@ public class ContentManager {
         return instance;
     }
 
-    public static ContentManager getInstance(String token) {
-        ContentManager.token = token;
-        if (instance == null)
-            instance = new ContentManager();
-        return instance;
-    }
-
     public void makeQuery() {
-        new YouTubeQuery().execute();
-    }
-
-    /*
-     * Prints out all results in the Iterator. For each result, print the
-     * title, video ID, and thumbnail.
-     *
-     * @param iteratorSearchResults Iterator of SearchResults to print
-     *
-     * @param query Search query (String)
-     */
-    private static void prettyPrint(Iterator<Video> iteratorSearchResults, String query) {
-        Log.d("YouTubeQuery", "\n=============================================================");
-        Log.d("YouTubeQuery", "   First " + NUMBER_OF_VIDEOS_RETURNED + " videos for search on \"" + query + "\".");
-        Log.d("YouTubeQuery", "=============================================================\n");
-
-        if (!iteratorSearchResults.hasNext()) {
-            Log.d("YouTubeQuery", " There aren't any results for your query.");
-        }
-
-        while (iteratorSearchResults.hasNext()) {
-            Video singleVideo = iteratorSearchResults.next();
-            String rId = singleVideo.getId();
-
-            Log.d("YouTubeQuery", " Video Id" + rId);
-            Log.d("YouTubeQuery", " Title: " + singleVideo.getSnippet().getTitle());
-            Log.d("YouTubeQuery", " Description: " + singleVideo.getSnippet().getDescription());
-            Log.d("YouTubeQuery", " Duration: " + singleVideo.getContentDetails().getDuration());
-            Log.d("YouTubeQuery", "\n-------------------------------------------------------------\n");
-        }
+        // Send parameters in here.
+        new YouTubeQuery().execute("Hello","world");
     }
 
     private class YouTubeQuery extends AsyncTask<String, Void, String> {
 
-        public YouTubeQuery() {
-        }
+        private final String TAG = "YouTubeQuery";
 
         @Override
         protected String doInBackground(String... params) {
-
+            Log.d(TAG, params[0]);
+            Log.d(TAG, params[1]);
             try {
                 // This object is used to make YouTube Data API requests. The last
                 // argument is required, but since we don't need anything
@@ -101,20 +66,17 @@ public class ContentManager {
                 youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
-                }).setApplicationName("time-sink-94a21").build();
+                }).setYouTubeRequestInitializer(new YouTubeRequestInitializer(YOUTUBE_API_KEY)).setApplicationName("TimeSink").build();
 
                 // Define the API request for retrieving search results.
                 YouTube.Search.List search = youtube.search().list("id,snippet");
 
-                // Set your developer key from the {{ Google Cloud Console }} for
-                // non-authenticated requests. See:
-                // {{ https://cloud.google.com/console }}
-                search.setOauthToken(ContentManager.token);
-                search.set("key", YOUTUBE_API_KEY);
-
+                // Set query terms
                 String query = "Education";
-
                 search.setQ(query);
+
+                // Set video durations.
+                search.setVideoDuration("short");
 
                 // Restrict the search results to only include videos. See:
                 // https://developers.google.com/youtube/v3/docs/search/list#type
@@ -122,20 +84,19 @@ public class ContentManager {
 
                 // To increase efficiency, only retrieve the fields that the
                 // application uses.
-                search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url,snippet/description)");
+                search.setFields("items(id/videoId)");
                 search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
 
                 // Call the API and print results.
                 SearchListResponse searchResponse = search.execute();
                 List<SearchResult> searchResultList = searchResponse.getItems();
-                if (searchResultList != null) {
-                    //prettyPrint(searchResultList.iterator(), query);
+                if (searchResultList == null) {
+
                 }
 
                 List<String> videoIds = new ArrayList<String>();
 
                 if (searchResultList != null) {
-
                     // Merge video IDs
                     for (SearchResult searchResult : searchResultList) {
                         videoIds.add(searchResult.getId().getVideoId());
@@ -145,7 +106,7 @@ public class ContentManager {
 
                     // Call the YouTube Data API's youtube.videos.list method to
                     // retrieve the resources that represent the specified videos.
-                    YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet, recordingDetails, contentDetails").setId(videoId);
+                    YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet, contentDetails").setId(videoId);
                     VideoListResponse listResponse = listVideosRequest.execute();
 
                     List<Video> videoList = listResponse.getItems();
@@ -155,14 +116,41 @@ public class ContentManager {
                     }
                 }
             } catch (GoogleJsonResponseException e) {
-                Log.e("YouTubeQuery", "There was a service error: " + e.getDetails().getCode() + " : "
+                Log.e(TAG, "There was a service error: " + e.getDetails().getCode() + " : "
                         + e.getDetails().getMessage());
             } catch (IOException e) {
-                Log.e("YouTubeQuery", "There was an IO error: " + e.getCause() + " : " + e.getMessage());
+                Log.e(TAG, "There was an IO error: " + e.getCause() + " : " + e.getMessage());
             } catch (Throwable t) {
                 t.printStackTrace();
             }
             return null;
+        }
+
+        /*
+        * Prints out all results in the Iterator. This should be used for debugging.
+        *
+        * @param iteratorSearchResults Iterator of SearchResults to print
+        *
+        * @param query Search query (String)
+        */
+        private void prettyPrint(Iterator<Video> iteratorSearchResults, String query) {
+            Log.d(TAG, "\n=============================================================");
+            Log.d(TAG, "   First " + NUMBER_OF_VIDEOS_RETURNED + " videos for search on \"" + query + "\".");
+            Log.d(TAG, "=============================================================\n");
+
+            if (!iteratorSearchResults.hasNext()) {
+                Log.d(TAG, " There aren't any results for your query.");
+            }
+
+            while (iteratorSearchResults.hasNext()) {
+                Video singleVideo = iteratorSearchResults.next();
+                String rId = singleVideo.getId();
+
+                Log.d(TAG, " Video Id" + rId);
+                Log.d(TAG, " Title: " + singleVideo.getSnippet().getTitle());
+                Log.d(TAG, " Duration: " + singleVideo.getContentDetails().getDuration());
+                Log.d(TAG, "\n-------------------------------------------------------------\n");
+            }
         }
     }
 
