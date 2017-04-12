@@ -36,6 +36,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_content);
 
         // Catch the content time from MainActivity intent

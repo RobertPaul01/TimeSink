@@ -1,6 +1,8 @@
 package com.abe.robert.timesink;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -43,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // layout variables
     private SeekBar seekBar;
-    private TextView tvMinutes;
+    private TextView tvMinutes, tvLogout;
+    private ImageView ivLogout;
     private Button bSink;
     private CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6;
 
@@ -56,12 +60,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
         ContentManager.getInstance().makeQuery();
 
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
+
+        tvLogout = (TextView) findViewById(R.id.tv_logout);
+        ivLogout = (ImageView) findViewById(R.id.iv_logout);
+        tvLogout.setOnClickListener(this);
+        ivLogout.setOnClickListener(this);
 
         bSink = (Button) findViewById(R.id.b_Sink);
         bSink.setOnClickListener(this);
@@ -140,23 +150,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sign_out_menu:
-                signOut();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.sign_out_menu:
+//
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     /**
      * The list of checkboxes that are checked on the UI
@@ -192,6 +202,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 startActivity(i);
                 break;
+            case R.id.iv_logout:
+            case R.id.tv_logout:
+                signOut();
+                break;
+
         }
     }
 
