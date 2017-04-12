@@ -2,7 +2,7 @@
     <string name="app_name">Time Sink</string>
     <string name="sign_in">Sign In</string>
     <string name="timeAvailable">How much time do you have?</string>
-    <string name="tv_sign_in">Sign In</string>
+    <string name="tv_sign_in">Sign in to Time Sink</string>
     <string name="sink">Sink!</string>
     <string name="sign_out">Sign Out</string>
     <string name="checkbox1">Music Videos</string>
@@ -12,4 +12,6 @@
     <string name="checkbox5">Science Experiments</string>
     <string name="checkbox6">Painting</string>
     <string name="interests">Interests</string>
+    <string name="whysignin">Signing in to Time Sink allows us \nto keep track of your interests across devices</string>
+    <string name="logout">Sign out</string>
 </resources>
