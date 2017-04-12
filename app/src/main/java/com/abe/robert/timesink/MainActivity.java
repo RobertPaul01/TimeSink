@@ -150,24 +150,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.main_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.sign_out_menu:
-//
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
     /**
      * The list of checkboxes that are checked on the UI
      *
@@ -254,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         saveCheckBoxesToDatabase();
+        signOut();
         finish();
     }
 
