@@ -3,6 +3,7 @@ package com.abe.robert.timesink;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private static final String TAG = "SignInActivity.java";
     private static final int RC_SIGN_IN = 9001;
+    private final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
 
     private final String SERVER_CLIENT_ID = "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com";
 
@@ -47,6 +49,9 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
+
+        // check for youtube installation
+        isYoutubeInstalled();
 
         // Assign fields
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
@@ -147,5 +152,14 @@ public class LoginActivity extends AppCompatActivity implements
                         }
                     }
                 });
+    }
+
+    private void isYoutubeInstalled() {
+        Intent mIntent = getPackageManager().getLaunchIntentForPackage(YOUTUBE_PACKAGE_NAME);
+        if (mIntent == null) {
+            Toast.makeText(LoginActivity.this, "Youtube needs to be installed for Time Sink to work", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + YOUTUBE_PACKAGE_NAME)));
+            finish();
+        }
     }
 }
