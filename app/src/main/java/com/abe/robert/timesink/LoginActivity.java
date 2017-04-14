@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -30,7 +33,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
-    private static final String TAG = "SignInActivity.java";
+    private static final String TAG = "LoginActivity.java";
     private static final int RC_SIGN_IN = 9001;
     public static final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
 
@@ -40,6 +43,8 @@ public class LoginActivity extends AppCompatActivity implements
 
     public static GoogleApiClient mGoogleApiClient;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private Handler mHandler;
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
@@ -86,15 +91,37 @@ public class LoginActivity extends AppCompatActivity implements
                 }
             }
         };
+
+        // create handler to sign the user in silently after showing the activity
+        mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+                OptionalPendingResult<GoogleSignInResult> pendingResult =
+                        Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+                if (pendingResult.isDone()) {
+                    // There's immediate result available.
+                    Log.d(TAG, "Silent Sign In: " + pendingResult.get().getSignInAccount() + "\nFirebase Auth: " + mFirebaseAuth.getCurrentUser());
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                } else {
+                    // There's no immediate result ready, displays some progress indicator and waits for the
+                    // async callback.
+                    pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                        @Override
+                        public void onResult(@NonNull GoogleSignInResult result) {
+                            // wait for user to log in normally
+                            Log.d(TAG, "Silent Sign In: no user currently signed in");
+                        }
+                    });
+                }
+            }
+        }, 250);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-
-                }
                 signIn();
                 break;
         }
