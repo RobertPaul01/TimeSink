@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private static final String TAG = "SignInActivity.java";
     private static final int RC_SIGN_IN = 9001;
-    private final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
+    public static final String YOUTUBE_PACKAGE_NAME = "com.google.android.youtube";
 
     private final String SERVER_CLIENT_ID = "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com";
 
@@ -159,7 +159,7 @@ public class LoginActivity extends AppCompatActivity implements
         if (mIntent == null) {
             Toast.makeText(LoginActivity.this, "Youtube needs to be installed for Time Sink to work", Toast.LENGTH_LONG).show();
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + YOUTUBE_PACKAGE_NAME)));
-            finish();
+            this.finishAffinity();
         }
     }
 }

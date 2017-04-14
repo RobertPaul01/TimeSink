@@ -1,5 +1,7 @@
 package com.abe.robert.timesink;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -67,5 +69,20 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
         Toast.makeText(ContentActivity.this, "Youtube initialization failure!! " + youTubeInitializationResult, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isYoutubeInstalled();
+    }
+
+    private void isYoutubeInstalled() {
+        Intent mIntent = getPackageManager().getLaunchIntentForPackage(LoginActivity.YOUTUBE_PACKAGE_NAME);
+        if (mIntent == null) {
+            Toast.makeText(ContentActivity.this, "Youtube needs to be installed for Time Sink to work", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + LoginActivity.YOUTUBE_PACKAGE_NAME)));
+            this.finishAffinity();
+        }
     }
 }
