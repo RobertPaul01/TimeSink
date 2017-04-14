@@ -3,6 +3,7 @@ package com.abe.robert.timesink;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -238,6 +240,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         saveCheckBoxesToDatabase();
         signOut();
         finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isYoutubeInstalled();
+    }
+
+    private void isYoutubeInstalled() {
+        Intent mIntent = getPackageManager().getLaunchIntentForPackage(LoginActivity.YOUTUBE_PACKAGE_NAME);
+        if (mIntent == null) {
+            Toast.makeText(MainActivity.this, "Youtube needs to be installed for Time Sink to work", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + LoginActivity.YOUTUBE_PACKAGE_NAME)));
+            this.finishAffinity();
+        }
     }
 
 }
