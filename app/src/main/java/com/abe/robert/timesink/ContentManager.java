@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.Stack;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Robby on 4/7/17.
@@ -27,17 +32,21 @@ import java.util.List;
 
 public class ContentManager {
 
+    // Logging tag
+    private static final String TAG = "ContentManager";
+
     // From Google developer console
     public static final String YOUTUBE_API_KEY = "AIzaSyAsXF23yzq5I9U7_5QDerpoQAgsrf0u3X4";
 
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
-
+    // Singleton
     private static ContentManager instance;
 
-    private YouTube youtube;
+    // Video data
+    private static final long NUMBER_OF_VIDEOS_RETURNED = 50;
+    private List<String> videoIds;
+    private Stack<String> prevVideoIds;
 
-    private ContentManager() {
-    }
+    private ContentManager() {}
 
     public static ContentManager getInstance() {
         if (instance == null)
@@ -45,25 +54,56 @@ public class ContentManager {
         return instance;
     }
 
-    public void makeQuery() {
-        // Send parameters in here.
-        new YouTubeQuery().execute("Hello","world");
+    public String getNextVideo(String prevId) {
+        if (videoIds.size() == 0) {
+            // TODO Goto next page of search
+            return null;
+        }
+        prevVideoIds.push(prevId);
+        int ranIndx = new Random().nextInt(videoIds.size());
+        String videoStr = videoIds.get(ranIndx);
+        videoIds.remove(ranIndx);
+        return videoStr;
+    }
+
+    public String getPrevVideo() {
+        if (prevVideoIds.size() == 0) {
+            return null;
+        }
+        return prevVideoIds.pop();
+    }
+
+    public void makeQuery(int durataion, String terms) {
+        try {
+            videoIds = new ArrayList<>();
+            prevVideoIds = new Stack<>();
+            new YouTubeQuery(durataion, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Log.d(TAG, "makeQuery() InterruptedException");
+        } catch (ExecutionException e) {
+            Log.d(TAG, "makeQuery() ExecutionException");
+        } catch (TimeoutException e) {
+            Log.d(TAG, "makeQuery() TimeoutException");
+        }
     }
 
     private class YouTubeQuery extends AsyncTask<String, Void, String> {
 
         private final String TAG = "YouTubeQuery";
 
+        // Query information.
+        private int duration;
+        private String terms;
+
+        public YouTubeQuery(int duration, String terms) {
+            this.duration = duration;
+            this.terms = terms;
+        }
+
         @Override
         protected String doInBackground(String... params) {
-            Log.d(TAG, params[0]);
-            Log.d(TAG, params[1]);
             try {
-                // This object is used to make YouTube Data API requests. The last
-                // argument is required, but since we don't need anything
-                // initialized when the HttpRequest is initialized, we override
-                // the interface and provide a no-op function.
-                youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
+                YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
                 }).setYouTubeRequestInitializer(new YouTubeRequestInitializer(YOUTUBE_API_KEY)).setApplicationName("TimeSink").build();
@@ -72,11 +112,16 @@ public class ContentManager {
                 YouTube.Search.List search = youtube.search().list("id,snippet");
 
                 // Set query terms
-                String query = "Education";
-                search.setQ(query);
+                search.setQ(terms);
 
                 // Set video durations.
-                search.setVideoDuration("short");
+                if (this.duration < 4) {
+                    search.setVideoDuration("short");
+                } else if (this.duration <= 20) {
+                    search.setVideoDuration("medium");
+                } else {
+                    search.setVideoDuration("long");
+                }
 
                 // Restrict the search results to only include videos. See:
                 // https://developers.google.com/youtube/v3/docs/search/list#type
@@ -91,28 +136,28 @@ public class ContentManager {
                 SearchListResponse searchResponse = search.execute();
                 List<SearchResult> searchResultList = searchResponse.getItems();
                 if (searchResultList == null) {
-
                 }
 
-                List<String> videoIds = new ArrayList<String>();
+                List<String> searchVideoIds = new ArrayList<>();
 
                 if (searchResultList != null) {
                     // Merge video IDs
                     for (SearchResult searchResult : searchResultList) {
-                        videoIds.add(searchResult.getId().getVideoId());
+                        searchVideoIds.add(searchResult.getId().getVideoId());
                     }
                     Joiner stringJoiner = Joiner.on(',');
-                    String videoId = stringJoiner.join(videoIds);
+                    String videoId = stringJoiner.join(searchVideoIds);
 
-                    // Call the YouTube Data API's youtube.videos.list method to
-                    // retrieve the resources that represent the specified videos.
                     YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet, contentDetails").setId(videoId);
                     VideoListResponse listResponse = listVideosRequest.execute();
 
                     List<Video> videoList = listResponse.getItems();
-
-                    if (videoList != null) {
-                        prettyPrint(videoList.iterator(), query);
+                    for (Video video : videoList) {
+                        String durationStr = video.getContentDetails().getDuration();
+                        int minInt = Integer.parseInt(durationStr.substring(2, durationStr.indexOf('M')));
+                        if (minInt <= duration+2 && minInt >= duration-2) {
+                            videoIds.add(video.getId());
+                        }
                     }
                 }
             } catch (GoogleJsonResponseException e) {
@@ -126,16 +171,10 @@ public class ContentManager {
             return null;
         }
 
-        /*
-        * Prints out all results in the Iterator. This should be used for debugging.
-        *
-        * @param iteratorSearchResults Iterator of SearchResults to print
-        *
-        * @param query Search query (String)
-        */
-        private void prettyPrint(Iterator<Video> iteratorSearchResults, String query) {
+        // This should be used to debug queries.
+        private void debugPrint(Iterator<Video> iteratorSearchResults) {
             Log.d(TAG, "\n=============================================================");
-            Log.d(TAG, "   First " + NUMBER_OF_VIDEOS_RETURNED + " videos for search on \"" + query + "\".");
+            Log.d(TAG, "   First " + NUMBER_OF_VIDEOS_RETURNED + " videos");
             Log.d(TAG, "=============================================================\n");
 
             if (!iteratorSearchResults.hasNext()) {

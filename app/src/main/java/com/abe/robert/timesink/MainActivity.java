@@ -9,9 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -33,7 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 
@@ -41,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // static intent keys
     public static final String CONTENT_TIME = "CONTENT_TIME";
+    public static final String CHECK_BOXES = "CHECK_BOXES";
 
     // constant private strings
     private static final String TAG = "MainActivity.java";
@@ -64,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-
-        ContentManager.getInstance().makeQuery();
 
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
@@ -109,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         bSink.setOnClickListener(this);
-
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -157,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *
      * @return null if nothing is checked, otherwise the list of checked boxes
      */
-    public List<String> getChecked() {
-        List<String> list = new ArrayList<>();
+    public ArrayList<String> getChecked() {
+        ArrayList<String> list = new ArrayList<>();
         if (checkBox1.isChecked()) list.add(checkBox1.getText().toString());
         if (checkBox2.isChecked()) list.add(checkBox2.getText().toString());
         if (checkBox3.isChecked()) list.add(checkBox3.getText().toString());
@@ -184,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // TODO: start activity for finding content
                 Intent i = new Intent(MainActivity.this, ContentActivity.class);
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
+                i.putStringArrayListExtra(MainActivity.CHECK_BOXES, getChecked());
                 startActivity(i);
                 break;
             case R.id.iv_logout:
