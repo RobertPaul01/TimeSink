@@ -6,12 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -19,7 +14,6 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * This activity is where the content will be displayed.
@@ -28,14 +22,10 @@ import java.util.Random;
  *
  * Created by Robby on 4/4/17.
  */
-
 public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
 
     // Logging tag
     private static final String TAG = "ContentActivity.java";
-
-    // From www.console.developers.google.com
-    public static final String YOUTUBE_API_KEY = "AIzaSyDp0k5y9Ru1GU7ftvlQ3jCVaxJjRQqmcWs";
 
     // Data from MainActivity bundle
     private int contentTime;
@@ -96,6 +86,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         for (String term : queryTerms) {
             queryStr.append(term).append("|");
         }
+        // Remove last logical OR symbol
         queryStr.deleteCharAt(queryStr.length()-1);
 
         ContentManager.getInstance().makeQuery(contentTime, queryStr.toString());
