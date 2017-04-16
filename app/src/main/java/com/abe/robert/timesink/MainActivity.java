@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 saveCheckBoxesToDatabase();
                 break;
             case R.id.b_Sink:
-                // TODO: start activity for finding content
                 Intent i = new Intent(MainActivity.this, ContentActivity.class);
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 i.putStringArrayListExtra(MainActivity.CHECK_BOXES, getChecked());
