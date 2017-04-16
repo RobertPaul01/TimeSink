@@ -57,6 +57,7 @@ public class ContentManager {
     public String getNextVideo(String prevId) {
         if (videoIds.size() == 0) {
             // TODO Goto next page of search
+            Log.d(TAG, "out of videos");
             return null;
         }
         prevVideoIds.push(prevId);
