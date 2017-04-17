@@ -36,7 +36,7 @@ public class ContentManager {
     private static final String TAG = "ContentManager";
 
     // From Google developer console
-    public static final String YOUTUBE_API_KEY = "AIzaSyAsXF23yzq5I9U7_5QDerpoQAgsrf0u3X4";
+    public static final String YOUTUBE_API_KEY = BuildConfig.YOUTUBE_API_KEY;
 
     // Singleton
     private static ContentManager instance;

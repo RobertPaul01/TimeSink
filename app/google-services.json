@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "599202828976",
+    "firebase_url": "https://time-sink-94a21.firebaseio.com",
+    "project_id": "time-sink-94a21",
+    "storage_bucket": "time-sink-94a21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599202828976:android:4b942dbb1ce31ebd",
+        "android_client_info": {
+          "package_name": "com.abe.robert.timesink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599202828976-cih761etmj21i2nqsj0ghma5qb5ju7ml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abe.robert.timesink",
+            "certificate_hash": "440b132a27b5267ec0ee529f01469b9526daeba1"
+          }
+        },
+        {
+          "client_id": "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsXF23yzq5I9U7_5QDerpoQAgsrf0u3X4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
