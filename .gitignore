@@ -8,3 +8,5 @@
 /captures
 *.zip
 *.pxd
+*.png
+keystore.properties
