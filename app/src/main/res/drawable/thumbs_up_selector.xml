@@ -1,0 +1,9 @@
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_pressed="false"
+        android:drawable="@drawable/thumbs_up_unselected" />
+    <item
+        android:state_pressed="true"
+        android:drawable="@drawable/thumbs_up_selected" />
+</selector>
