@@ -165,13 +165,13 @@ public class ContentManager {
                     VideoListResponse listResponse = listVideosRequest.execute();
                     List<Video> videoList = listResponse.getItems();
                     //debugPrint(videoList.iterator());
-                    Random ran = new Random();
+
                     for (Video video : videoList) {
                         VideoSnippet snip = video.getSnippet();
                         VideoContentDetails contentDetails = video.getContentDetails();
                         String durationStr = contentDetails.getDuration();
                         int minInt = Integer.parseInt(durationStr.substring(2, durationStr.indexOf('M')));
-                        if (minInt <= duration + 3 && minInt >= duration - 3 && ran.nextBoolean()) {
+                        if (minInt <= duration + 3 && minInt >= duration - 3) {
                             VideoData data = new VideoData(video.getId(), snip.getTitle(), snip.getDescription());
                             videoIds.add(data);
                         }
