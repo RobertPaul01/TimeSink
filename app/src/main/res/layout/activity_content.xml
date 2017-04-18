@@ -13,10 +13,9 @@
 
     <LinearLayout
         android:id="@+id/button_area"
-        android:padding="8dp"
+        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
@@ -51,9 +50,10 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/video_desc"
+        android:layout_margin="8dp"
         android:padding="8dp"
         android:background="@color/colorPrimaryDark"
         android:text=""
