@@ -33,7 +33,6 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     private static final String TAG = "ContentActivity.java";
 
     // Data from MainActivity bundle
-    private int contentTime;
     private ArrayList<String> queryTerms;
 
     // UI views
@@ -43,6 +42,8 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     private TextView desc;
 
     // Current video data
+    private String queryStr;
+    private int contentTime;
     private VideoData curData;
 
     @Override
@@ -143,16 +144,16 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
             Log.e(TAG, "Bundle b is null in onCreate()");
         }
 
-        StringBuilder queryStr = new StringBuilder();
+        // Construct query string
+        StringBuilder sB = new StringBuilder();
         if (queryTerms != null && !queryTerms.isEmpty()) {
             for (String term : queryTerms) {
-                queryStr.append(term).append("|");
+                sB.append(term).append("|");
             }
             // Remove last logical OR symbol
-            queryStr.deleteCharAt(queryStr.length() - 1);
+            sB.deleteCharAt(queryStr.length() - 1);
         }
-
-        ContentManager.getInstance().makeQuery(contentTime, queryStr.toString());
+        queryStr = sB.toString();
 
         // Initialize the YouTubePlayerSupportFragment
         YouTubePlayerSupportFragment youTubeFrag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment);
@@ -167,7 +168,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     }
 
     private void loadNextVideo() {
-        curData = ContentManager.getInstance().getNextVideo();
+        curData = ContentManager.getInstance().getNextVideo(contentTime, queryStr.toString());
         if (curData == null) {
             Toast.makeText(this, "No more videos left", Toast.LENGTH_LONG).show();
             finish();
