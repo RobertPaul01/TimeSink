@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (checkBox7.isChecked()) list.add(checkBox7.getText().toString());
         if (checkBox8.isChecked()) list.add(checkBox8.getText().toString());
         if (checkBox9.isChecked()) list.add(checkBox9.getText().toString());
-        if (checkBox10.isChecked()) list.add(checkBox10.getText().toString());
+        if (checkBox10.isChecked()) list.add(etCustom.getText().toString());
 
         return (list.isEmpty()) ? null : list;
     }
@@ -306,8 +306,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        likes = new HashSet<String>();
-        dislikes = new HashSet<String>();
+        likes = new HashSet<>();
+        dislikes = new HashSet<>();
         initializeLikesAndDislikes();
         isYoutubeInstalled();
     }
