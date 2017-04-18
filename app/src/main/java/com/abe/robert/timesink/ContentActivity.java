@@ -1,7 +1,6 @@
 package com.abe.robert.timesink;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +15,8 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -54,6 +55,10 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                thumbsDown.setSelected(false);
+                thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
+                thumbsUp.setSelected(false);
+                thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
                 loadNextVideo();
             }
         });
@@ -74,12 +79,20 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
                         thumbsUp.setSelected(false);
                     }
                 }
-
                 //TODO thumbs down
+                // add video to dislikes
+                if (!MainActivity.dislikes.contains(curData.getVideoId())) {
+                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("dislikes").push().setValue(curData.getVideoId());
+                }
+                //remove video from likes
+                if (MainActivity.likes.contains(curData.getVideoId())) {
+//                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("dislikes").key(curData.getVideoId()).remove();
+                }
+
             }
         });
-        thumbsUp = (ImageButton) findViewById(R.id.ib_thumbsUp);
 
+        thumbsUp = (ImageButton) findViewById(R.id.ib_thumbsUp);
         thumbsUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +109,14 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
                     }
                 }
                 //TODO thumbs up
+                // add video to likes
+                if (!MainActivity.likes.contains(curData.getVideoId())) {    // add video to dislikes
+                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("likes").push().setValue(curData.getVideoId());
+                }
+                // remove from dislikes
+                if (!MainActivity.dislikes.contains(curData.getVideoId())) {
+//                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("likes").push().setValue(curData)
+                }
             }
         });
 
@@ -149,9 +170,18 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         curData = ContentManager.getInstance().getNextVideo();
         if (curData == null) {
             Toast.makeText(this, "No more videos left", Toast.LENGTH_LONG).show();
+            finish();
         } else {
             desc.setText(curData.desc);
             youTubePlayer.loadVideo(curData.videoId);
+            if(MainActivity.dislikes.contains(curData.getVideoId())) {
+                thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
+                thumbsDown.setSelected(true);
+            }
+            else if(MainActivity.likes.contains(curData.getVideoId())) {
+                thumbsUp.setImageResource(R.drawable.thumbs_up_selected);
+                thumbsUp.setSelected(true);
+            }
         }
     }
     
