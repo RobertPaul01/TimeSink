@@ -47,7 +47,7 @@ public class ContentManager {
 
     // Video data
     private final long QUERY_SIZE = 50;
-    private final long SIZE_OF_STACK = 10;
+    private final long SIZE_OF_STACK = 2;
     private Stack<VideoData> videoIds;
     private String nextPage;
 
@@ -70,13 +70,14 @@ public class ContentManager {
         return vD;
     }
 
-    public void makeQuery(int duration, String terms) {
+    public VideoData makeQuery(int duration, String terms) {
         try {
             videoIds = new Stack<>();
-            while (videoIds.size() < SIZE_OF_STACK) {
+            //while (videoIds.size() < SIZE_OF_STACK) {
                 new YouTubeQuery(duration, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
-            }
+            //}
             Collections.shuffle(videoIds);
+            return getNextVideo(duration, terms);
         } catch (InterruptedException e) {
             Log.d(TAG, "makeQuery() InterruptedException");
         } catch (ExecutionException e) {
@@ -84,6 +85,7 @@ public class ContentManager {
         } catch (TimeoutException e) {
             Log.d(TAG, "makeQuery() TimeoutException");
         }
+        return null;
     }
 
     private class YouTubeQuery extends AsyncTask<String, Void, String> {
@@ -102,7 +104,6 @@ public class ContentManager {
         @Override
         protected String doInBackground(String... params) {
             try {
-                // Recreate the stack
                 YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
@@ -126,6 +127,8 @@ public class ContentManager {
                 // Restrict the search results to only include videos. See:
                 // https://developers.google.com/youtube/v3/docs/search/list#type
                 search.setType("video");
+                search.setSafeSearch("strict");
+                search.setTopicId("/m/01k8wb");
 
                 // set page token
                 if (nextPage != null)
