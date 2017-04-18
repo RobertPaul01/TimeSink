@@ -151,7 +151,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
                 sB.append(term).append("|");
             }
             // Remove last logical OR symbol
-            sB.deleteCharAt(queryStr.length() - 1);
+            sB.deleteCharAt(sB.length() - 1);
         }
         queryStr = sB.toString();
 
