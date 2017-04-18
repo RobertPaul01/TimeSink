@@ -256,10 +256,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(dataSnapshot.exists()) {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     for(String key : map.keySet()) {
-                        if(map.get(key).equals(-1)) {
+                        if(String.valueOf(map.get(key)).equals("-1")) {
                             dislikes.add(key);
                         }
-                        else if(map.get(key).equals(1)) {
+                        else if(String.valueOf(map.get(key)).equals("1")) {
                             likes.add(key);
                         }
                     }
