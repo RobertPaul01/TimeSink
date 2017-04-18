@@ -169,7 +169,6 @@
 
         </LinearLayout>
 
-<<<<<<< HEAD
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -201,8 +200,6 @@
 
         </LinearLayout>
 
-=======
->>>>>>> origin/master
     </LinearLayout>
 
     <Button
