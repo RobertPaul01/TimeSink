@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -97,7 +98,6 @@ public class ContentManager {
             try {
                 // Recreate the stack
                 videoIds = new Stack<>();
-
                 YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }

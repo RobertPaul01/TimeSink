@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,12 +47,6 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         setContentView(R.layout.activity_content);
 
         nextButton = (Button) findViewById(R.id.bt_next);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadNextVideo();
-            }
-        });
 
         desc = (TextView) findViewById(R.id.video_desc);
         desc.setMovementMethod(new ScrollingMovementMethod());
@@ -106,7 +99,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         desc.setText(curData.desc);
         youTubePlayer.loadVideo(curData.videoId);
     }
-
+    
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
         Toast.makeText(ContentActivity.this, "Youtube initialization failure!! " + youTubeInitializationResult, Toast.LENGTH_LONG).show();

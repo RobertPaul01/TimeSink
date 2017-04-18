@@ -10,3 +10,4 @@
 *.pxd
 *.png
 keystore.properties
+app/google-services.json

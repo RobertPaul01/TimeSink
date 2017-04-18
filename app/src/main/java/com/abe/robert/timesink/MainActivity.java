@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (checkBox5.isChecked()) list.add(checkBox5.getText().toString());
         if (checkBox6.isChecked()) list.add(checkBox6.getText().toString());
 
-        return (list.isEmpty()) ? null : list;
+        return (list.get(0) == null) ? null : list;
     }
 
     @Override
