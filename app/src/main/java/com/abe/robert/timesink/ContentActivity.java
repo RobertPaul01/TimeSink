@@ -147,8 +147,12 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
 
     private void loadNextVideo() {
         curData = ContentManager.getInstance().getNextVideo();
-        desc.setText(curData.desc);
-        youTubePlayer.loadVideo(curData.videoId);
+        if (curData == null) {
+            Toast.makeText(this, "No more videos left", Toast.LENGTH_LONG).show();
+        } else {
+            desc.setText(curData.desc);
+            youTubePlayer.loadVideo(curData.videoId);
+        }
     }
     
     @Override
