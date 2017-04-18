@@ -254,12 +254,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    Map<String, Long> map = (Map<String, Long>) dataSnapshot.getValue();
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     for(String key : map.keySet()) {
-                        if(map.get(key) == -1) {
+                        if(String.valueOf(map.get(key)).equals("-1")) {
                             dislikes.add(key);
                         }
-                        else if(map.get(key) == 1) {
+                        else if(String.valueOf(map.get(key)).equals("1")) {
                             likes.add(key);
                         }
                     }
