@@ -22,10 +22,10 @@ public class User {
         this.checkbox4 = checkbox4;
         this.checkbox5 = checkbox5;
         this.checkbox6 = checkbox6;
-        this.checkbox3 = checkbox7;
-        this.checkbox4 = checkbox8;
-        this.checkbox5 = checkbox9;
-        this.checkbox6 = checkbox10;
+        this.checkbox7 = checkbox7;
+        this.checkbox8 = checkbox8;
+        this.checkbox9 = checkbox9;
+        this.checkbox10 = checkbox10;
         this.custom = custom;
         this.minutes = minutes;
     }
@@ -124,5 +124,23 @@ public class User {
 
     public void setMinutes(int minutes) {
         this.minutes = minutes;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "checkbox1=" + checkbox1 +
+                ", checkbox2=" + checkbox2 +
+                ", checkbox3=" + checkbox3 +
+                ", checkbox4=" + checkbox4 +
+                ", checkbox5=" + checkbox5 +
+                ", checkbox6=" + checkbox6 +
+                ", checkbox7=" + checkbox7 +
+                ", checkbox8=" + checkbox8 +
+                ", checkbox9=" + checkbox9 +
+                ", checkbox10=" + checkbox10 +
+                ", custom='" + custom + '\'' +
+                ", minutes=" + minutes +
+                '}';
     }
 }

@@ -68,9 +68,13 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         thumbsDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String id = curData.getVideoId();
+                // already selected, deselect
                 if(thumbsDown.isSelected()) {
                     thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
                     thumbsDown.setSelected(false);
+                    MainActivity.dislikes.remove(id);
+                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).getRef().removeValue(); //remove from database
                 }
                 else {
                     thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
@@ -79,17 +83,10 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
                         thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
                         thumbsUp.setSelected(false);
                     }
+                    MainActivity.dislikes.add(id);
+                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child(id).setValue(-1);
+                    MainActivity.likes.remove(id); //remove from local likes
                 }
-                //TODO thumbs down
-                // add video to dislikes
-                if (!MainActivity.dislikes.contains(curData.getVideoId())) {
-                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("dislikes").push().setValue(curData.getVideoId());
-                }
-                //remove video from likes
-                if (MainActivity.likes.contains(curData.getVideoId())) {
-//                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("dislikes").key(curData.getVideoId()).remove();
-                }
-
             }
         });
 
@@ -97,10 +94,15 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         thumbsUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String id = curData.getVideoId();
+                // already selected, deselect
                 if(thumbsUp.isSelected()) {
                     thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
                     thumbsUp.setSelected(false);
+                    MainActivity.likes.remove(id); //remove from local likes
+                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child(id).getRef().removeValue(); //remove from database
                 }
+                // not selected, add to likes
                 else {
                     thumbsUp.setImageResource(R.drawable.thumbs_up_selected);
                     thumbsUp.setSelected(true);
@@ -108,15 +110,9 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
                         thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
                         thumbsDown.setSelected(false);
                     }
-                }
-                //TODO thumbs up
-                // add video to likes
-                if (!MainActivity.likes.contains(curData.getVideoId())) {    // add video to dislikes
-                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("likes").push().setValue(curData.getVideoId());
-                }
-                // remove from dislikes
-                if (!MainActivity.dislikes.contains(curData.getVideoId())) {
-//                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("likes").push().setValue(curData)
+                    MainActivity.likes.add(id);
+                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child(id).setValue(1);
+                    MainActivity.dislikes.remove(id); //remove from local dislikes
                 }
             }
         });
