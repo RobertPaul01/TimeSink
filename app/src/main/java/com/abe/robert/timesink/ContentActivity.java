@@ -175,6 +175,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
 
     private void setPlayerData() {
         desc.setText(curData.desc);
+        desc.setScrollY(0);
         youTubePlayer.loadVideo(curData.videoId);
         if(MainActivity.dislikes.contains(curData.getVideoId())) {
             thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
