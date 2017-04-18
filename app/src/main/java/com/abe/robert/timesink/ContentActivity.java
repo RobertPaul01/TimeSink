@@ -160,25 +160,29 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         Log.d(TAG, "Youtube initialization success. Need to look for content duration: " + contentTime + " mins.");
         this.youTubePlayer = youTubePlayer;
-        loadNextVideo();
+        startNewVideo();
+    }
+
+    private void startNewVideo() {
+        curData = ContentManager.getInstance().makeQuery(contentTime, queryStr);
+        setPlayerData();
     }
 
     private void loadNextVideo() {
         curData = ContentManager.getInstance().getNextVideo(contentTime, queryStr.toString());
-        if (curData == null) {
-            Toast.makeText(this, "No more videos left", Toast.LENGTH_LONG).show();
-            finish();
-        } else {
-            desc.setText(curData.desc);
-            youTubePlayer.loadVideo(curData.videoId);
-            if(MainActivity.dislikes.contains(curData.getVideoId())) {
-                thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
-                thumbsDown.setSelected(true);
-            }
-            else if(MainActivity.likes.contains(curData.getVideoId())) {
-                thumbsUp.setImageResource(R.drawable.thumbs_up_selected);
-                thumbsUp.setSelected(true);
-            }
+        setPlayerData();
+    }
+
+    private void setPlayerData() {
+        desc.setText(curData.desc);
+        youTubePlayer.loadVideo(curData.videoId);
+        if(MainActivity.dislikes.contains(curData.getVideoId())) {
+            thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
+            thumbsDown.setSelected(true);
+        }
+        else if(MainActivity.likes.contains(curData.getVideoId())) {
+            thumbsUp.setImageResource(R.drawable.thumbs_up_selected);
+            thumbsUp.setSelected(true);
         }
     }
     
