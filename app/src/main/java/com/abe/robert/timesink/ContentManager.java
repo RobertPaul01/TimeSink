@@ -118,10 +118,8 @@ public class ContentManager {
                 // Set video durations.
                 if (this.duration < 4) {
                     search.setVideoDuration("short");
-                } else if (this.duration <= 20) {
-                    search.setVideoDuration("medium");
                 } else {
-                    search.setVideoDuration("long");
+                    search.setVideoDuration("medium");
                 }
 
                 // Restrict the search results to only include videos. See:
@@ -171,7 +169,10 @@ public class ContentManager {
                         VideoContentDetails contentDetails = video.getContentDetails();
                         String durationStr = contentDetails.getDuration();
                         int minInt = Integer.parseInt(durationStr.substring(2, durationStr.indexOf('M')));
-                        if (minInt <= duration + 3 && minInt >= duration - 3) {
+                        if (minInt == -1) {
+                            minInt = Integer.parseInt(durationStr.substring(durationStr.indexOf('H')));
+                        }
+                        if (minInt <= duration + (duration/4) && minInt >= duration - (duration/4)) {
                             VideoData data = new VideoData(video.getId(), snip.getTitle(), snip.getDescription());
                             videoIds.add(data);
                         }
