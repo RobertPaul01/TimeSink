@@ -30,7 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -51,11 +55,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             checkBox8, checkBox9, checkBox10;
     private EditText etCustom;
 
+    //dislikes
+    public static HashSet<String> dislikes;
+    public static HashSet<String> likes;
+
     // Firebase variables
     FirebaseAuth mFirebaseAuth;
     FirebaseUser mFirebaseUser;
     public static DatabaseReference mFirebaseDatabase;
-    private String mFireBaseUserId;
+    public static String mFireBaseUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFirebaseDatabase = FirebaseDatabase.getInstance().getReference();
             mFireBaseUserId = mFirebaseAuth.getCurrentUser().getUid();
             preLoadCheckBoxesFromDatabase();
+            likes = new HashSet<String>();
+            dislikes = new HashSet<String>();
+            initializeLikesAndDislikes();
         }
     }
 
@@ -231,6 +242,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     etCustom.setText(String.valueOf(map.get("custom")));
                     tvMinutes.setText(String.valueOf(map.get("minutes")));
                     seekBar.setProgress(Integer.parseInt(String.valueOf(map.get("minutes")))-1);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void initializeLikesAndDislikes() {
+        mFirebaseDatabase.child("videos").child(mFireBaseUserId).child("dislikes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    for(String key : map.keySet()) {
+                        dislikes.add( (String) map.get(key));
+                    }
+                    Log.d(TAG, "Dislikes: " + Arrays.toString(dislikes.toArray()));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        mFirebaseDatabase.child("videos").child(mFireBaseUserId).child("likes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    for(String key : map.keySet()) {
+                        likes.add( (String) map.get(key));
+                    }
+                    Log.d(TAG, "Likes: " + Arrays.toString(dislikes.toArray()));
                 }
             }
 
