@@ -1,6 +1,7 @@
 package com.abe.robert.timesink;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     // UI views
     private YouTubePlayer youTubePlayer;
     private Button nextButton;
+    private ImageButton thumbsDown, thumbsUp;
     private TextView desc;
 
     // Current video data
@@ -52,6 +55,47 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
             @Override
             public void onClick(View view) {
                 loadNextVideo();
+            }
+        });
+
+        thumbsDown = (ImageButton) findViewById(R.id.ib_thumbsDown);
+        thumbsDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(thumbsDown.isSelected()) {
+                    thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
+                    thumbsDown.setSelected(false);
+                }
+                else {
+                    thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
+                    thumbsDown.setSelected(true);
+                    if(thumbsUp.isSelected()) {
+                        thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
+                        thumbsUp.setSelected(false);
+                    }
+                }
+
+                //TODO thumbs down
+            }
+        });
+        thumbsUp = (ImageButton) findViewById(R.id.ib_thumbsUp);
+
+        thumbsUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(thumbsUp.isSelected()) {
+                    thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
+                    thumbsUp.setSelected(false);
+                }
+                else {
+                    thumbsUp.setImageResource(R.drawable.thumbs_up_selected);
+                    thumbsUp.setSelected(true);
+                    if(thumbsDown.isSelected()) {
+                        thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
+                        thumbsDown.setSelected(false);
+                    }
+                }
+                //TODO thumbs up
             }
         });
 

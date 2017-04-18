@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,6 +62,10 @@ public class LoginActivity extends AppCompatActivity implements
         // Set click listeners
         mSignInButton.setOnClickListener(this);
 
+        // Initialize FirebaseAuth
+        FirebaseApp.initializeApp(this);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(SERVER_CLIENT_ID)
@@ -71,8 +76,13 @@ public class LoginActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        // Initialize FirebaseAuth
-        mFirebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -112,7 +122,6 @@ public class LoginActivity extends AppCompatActivity implements
                 }
             }
         }, 250);
-
     }
 
     @Override
