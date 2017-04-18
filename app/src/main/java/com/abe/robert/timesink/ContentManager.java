@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -45,8 +46,10 @@ public class ContentManager {
     private static ContentManager instance;
 
     // Video data
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 50;
+    private final long QUERY_SIZE = 50;
+    private final long SIZE_OF_STACK = 10;
     private Stack<VideoData> videoIds;
+    private String nextPage;
 
     private ContentManager() {
         videoIds = new Stack<>();
@@ -58,10 +61,10 @@ public class ContentManager {
         return instance;
     }
 
-    public VideoData getNextVideo() {
-        if (videoIds.empty()) {
-            // TODO This will crash for now
-            return null;
+    public VideoData getNextVideo(int duration, String terms) {
+        while (videoIds.empty()) {
+            // make query with null value and use page token
+            makeQuery(duration, terms);
         }
         VideoData vD = videoIds.pop();
         return vD;
@@ -69,7 +72,10 @@ public class ContentManager {
 
     public void makeQuery(int durataion, String terms) {
         try {
-            new YouTubeQuery(durataion, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
+            videoIds = new Stack<>();
+            while (videoIds.size() < SIZE_OF_STACK) {
+                new YouTubeQuery(durataion, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
+            }
             Collections.shuffle(videoIds);
         } catch (InterruptedException e) {
             Log.d(TAG, "makeQuery() InterruptedException");
@@ -97,7 +103,6 @@ public class ContentManager {
         protected String doInBackground(String... params) {
             try {
                 // Recreate the stack
-                videoIds = new Stack<>();
                 YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
@@ -122,13 +127,21 @@ public class ContentManager {
                 // https://developers.google.com/youtube/v3/docs/search/list#type
                 search.setType("video");
 
+                // set page token
+                if (nextPage != null)
+                    search.setPageToken(nextPage);
+
                 // To increase efficiency, only retrieve the fields that the
                 // application uses.
-                search.setFields("items(id/videoId)");
-                search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
+                search.setFields("nextPageToken,items(id/videoId)");
+                search.setMaxResults(QUERY_SIZE);
 
                 // Call the API and print results.
                 SearchListResponse searchResponse = search.execute();
+
+                nextPage = searchResponse.getNextPageToken();
+                Log.d(TAG, "getNextPageToken() = " + nextPage + " videoIds.size() = " + videoIds.size());
+
                 List<SearchResult> searchResultList = searchResponse.getItems();
                 if (searchResultList == null) {
                     // TODO
@@ -149,12 +162,13 @@ public class ContentManager {
                     VideoListResponse listResponse = listVideosRequest.execute();
                     List<Video> videoList = listResponse.getItems();
                     //debugPrint(videoList.iterator());
+                    Random ran = new Random();
                     for (Video video : videoList) {
                         VideoSnippet snip = video.getSnippet();
                         VideoContentDetails contentDetails = video.getContentDetails();
                         String durationStr = contentDetails.getDuration();
                         int minInt = Integer.parseInt(durationStr.substring(2, durationStr.indexOf('M')));
-                        if (minInt <= duration+2 && minInt >= duration-2) {
+                        if (minInt <= duration + 3 && minInt >= duration - 3 && ran.nextBoolean()) {
                             VideoData data = new VideoData(video.getId(), snip.getTitle(), snip.getDescription());
                             videoIds.add(data);
                         }
@@ -174,7 +188,7 @@ public class ContentManager {
         // This should be used to debug queries.
         private void debugPrint(Iterator<Video> iteratorSearchResults) {
             Log.d(TAG, "\n=============================================================");
-            Log.d(TAG, "   First " + NUMBER_OF_VIDEOS_RETURNED + " videos");
+            Log.d(TAG, "   First " + QUERY_SIZE + " videos");
             Log.d(TAG, "=============================================================\n");
 
             if (!iteratorSearchResults.hasNext()) {
