@@ -133,9 +133,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFirebaseDatabase = FirebaseDatabase.getInstance().getReference();
             mFireBaseUserId = mFirebaseAuth.getCurrentUser().getUid();
             preLoadCheckBoxesFromDatabase();
-            likes = new HashSet<String>();
-            dislikes = new HashSet<String>();
-            initializeLikesAndDislikes();
         }
     }
 
@@ -253,32 +250,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initializeLikesAndDislikes() {
-        mFirebaseDatabase.child("videos").child(mFireBaseUserId).child("dislikes").addListenerForSingleValueEvent(new ValueEventListener() {
+        mFirebaseDatabase.child("videos").child(mFireBaseUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    Map<String, Long> map = (Map<String, Long>) dataSnapshot.getValue();
                     for(String key : map.keySet()) {
-                        dislikes.add( (String) map.get(key));
+                        if(map.get(key) == -1) {
+                            dislikes.add(key);
+                        }
+                        else if(map.get(key) == 1) {
+                            likes.add(key);
+                        }
                     }
                     Log.d(TAG, "Dislikes: " + Arrays.toString(dislikes.toArray()));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        mFirebaseDatabase.child("videos").child(mFireBaseUserId).child("likes").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    for(String key : map.keySet()) {
-                        likes.add( (String) map.get(key));
-                    }
-                    Log.d(TAG, "Likes: " + Arrays.toString(dislikes.toArray()));
+                    Log.d(TAG, "Likes: " + Arrays.toString(likes.toArray()));
                 }
             }
 
@@ -293,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * saves the checkboxes states to the database
      */
     private void saveCheckBoxesToDatabase() {
-        Log.d(TAG, "Saved to database");
         if(etCustom.getText().toString().contains(" ")) {///*regex that matches one word*/"")) {
             Toast.makeText(this, "Custom field is limited to one word", Toast.LENGTH_SHORT).show();
             etCustom.setText(
@@ -307,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 checkBox4.isChecked(), checkBox5.isChecked(), checkBox6.isChecked(), checkBox7.isChecked(),
                 checkBox8.isChecked(), checkBox9.isChecked(), checkBox10.isChecked(), etCustom.getText().toString(),
                 Integer.parseInt(tvMinutes.getText().toString()));
-
+        Log.d(TAG, "Saving to database: " + user);
         mFirebaseDatabase.child("users").child(mFireBaseUserId).setValue(user);
     }
 
@@ -321,6 +306,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
+        likes = new HashSet<String>();
+        dislikes = new HashSet<String>();
+        initializeLikesAndDislikes();
         isYoutubeInstalled();
     }
 
