@@ -63,18 +63,18 @@ public class ContentManager {
 
     public VideoData getNextVideo(int duration, String terms) {
         while (videoIds.empty()) {
-            // make query with null value and use page token
+            // make query to load in data
             makeQuery(duration, terms);
         }
         VideoData vD = videoIds.pop();
         return vD;
     }
 
-    public void makeQuery(int durataion, String terms) {
+    public void makeQuery(int duration, String terms) {
         try {
             videoIds = new Stack<>();
             while (videoIds.size() < SIZE_OF_STACK) {
-                new YouTubeQuery(durataion, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
+                new YouTubeQuery(duration, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
             }
             Collections.shuffle(videoIds);
         } catch (InterruptedException e) {
