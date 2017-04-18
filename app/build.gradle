@@ -9,6 +9,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         applicationVariants.all { variant ->
@@ -34,7 +35,7 @@ dependencies {
     compile 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'
     // Google Login
     compile 'com.google.android.gms:play-services-auth:10.2.1'
-    // Testing
+    // Firebase
     compile 'com.google.firebase:firebase-auth:10.2.1'
     compile 'com.google.firebase:firebase-database:10.2.1'
     compile 'com.google.firebase:firebase-core:10.2.1'
@@ -42,6 +43,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //ConstraintLayout
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:design:25.3.1'
 }
 
 def getApiKey(){

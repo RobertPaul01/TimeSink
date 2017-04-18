@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -44,13 +46,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar seekBar;
     private TextView tvMinutes, tvLogout;
     private ImageView ivLogout;
-    private Button bSink;
-    private CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6;
+    private FloatingActionButton bSink;
+    private CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7,
+            checkBox8, checkBox9, checkBox10;
+    private EditText etCustom;
 
     // Firebase variables
     FirebaseAuth mFirebaseAuth;
     FirebaseUser mFirebaseUser;
-    DatabaseReference mFirebaseDatabase;
+    public static DatabaseReference mFirebaseDatabase;
     private String mFireBaseUserId;
 
     @Override
@@ -61,13 +65,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         seekBar = (SeekBar) findViewById(R.id.sb_minute_slider);
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
+        etCustom = (EditText) findViewById(R.id.et_custom);
 
         tvLogout = (TextView) findViewById(R.id.tv_logout);
         ivLogout = (ImageView) findViewById(R.id.iv_logout);
         tvLogout.setOnClickListener(this);
         ivLogout.setOnClickListener(this);
 
-        bSink = (Button) findViewById(R.id.b_Sink);
+        bSink = (FloatingActionButton) findViewById(R.id.b_Sink);
         bSink.setOnClickListener(this);
 
         checkBox1 = (CheckBox) findViewById(R.id.checkBox1);
@@ -76,12 +81,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkBox4 = (CheckBox) findViewById(R.id.checkBox4);
         checkBox5 = (CheckBox) findViewById(R.id.checkBox5);
         checkBox6 = (CheckBox) findViewById(R.id.checkBox6);
+        checkBox7 = (CheckBox) findViewById(R.id.checkBox7);
+        checkBox8 = (CheckBox) findViewById(R.id.checkBox8);
+        checkBox9 = (CheckBox) findViewById(R.id.checkBox9);
+        checkBox10 = (CheckBox) findViewById(R.id.checkBox10);
         checkBox1.setOnClickListener(this);
         checkBox2.setOnClickListener(this);
         checkBox3.setOnClickListener(this);
         checkBox4.setOnClickListener(this);
         checkBox5.setOnClickListener(this);
         checkBox6.setOnClickListener(this);
+        checkBox7.setOnClickListener(this);
+        checkBox8.setOnClickListener(this);
+        checkBox9.setOnClickListener(this);
+        checkBox10.setOnClickListener(this);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -156,6 +169,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (checkBox4.isChecked()) list.add(checkBox4.getText().toString());
         if (checkBox5.isChecked()) list.add(checkBox5.getText().toString());
         if (checkBox6.isChecked()) list.add(checkBox6.getText().toString());
+        if (checkBox7.isChecked()) list.add(checkBox7.getText().toString());
+        if (checkBox8.isChecked()) list.add(checkBox8.getText().toString());
+        if (checkBox9.isChecked()) list.add(checkBox9.getText().toString());
+        if (checkBox10.isChecked()) list.add(checkBox10.getText().toString());
 
         return (list.get(0) == null) ? null : list;
     }
@@ -169,6 +186,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.checkBox4:
             case R.id.checkBox5:
             case R.id.checkBox6:
+            case R.id.checkBox7:
+            case R.id.checkBox8:
+            case R.id.checkBox9:
+            case R.id.checkBox10:
                 saveCheckBoxesToDatabase();
                 break;
             case R.id.b_Sink:
@@ -203,6 +224,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     checkBox4.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox4"))));
                     checkBox5.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox5"))));
                     checkBox6.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox6"))));
+                    checkBox7.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox7"))));
+                    checkBox8.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox8"))));
+                    checkBox9.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox9"))));
+                    checkBox10.setChecked(Boolean.parseBoolean(String.valueOf(map.get("checkbox10"))));
+                    etCustom.setText(String.valueOf(map.get("custom")));
                     tvMinutes.setText(String.valueOf(map.get("minutes")));
                     seekBar.setProgress(Integer.parseInt(String.valueOf(map.get("minutes")))-1);
                 }
@@ -220,8 +246,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void saveCheckBoxesToDatabase() {
         Log.d(TAG, "Saved to database");
+        if(etCustom.getText().toString().contains(" ")) {///*regex that matches one word*/"")) {
+            Toast.makeText(this, "Custom field is limited to one word", Toast.LENGTH_SHORT).show();
+            etCustom.setText(
+                    etCustom.getText().toString().substring(
+                            0, etCustom.getText().toString().indexOf(" ")
+                    ));
+        }
+        etCustom.setText(etCustom.getText().toString().replaceAll(" ", "")); // remove any beginning whitespace
+
         User user = new User(checkBox1.isChecked(), checkBox2.isChecked(), checkBox3.isChecked(),
-                checkBox4.isChecked(), checkBox5.isChecked(), checkBox6.isChecked(), Integer.parseInt(tvMinutes.getText().toString()));
+                checkBox4.isChecked(), checkBox5.isChecked(), checkBox6.isChecked(), checkBox7.isChecked(),
+                checkBox8.isChecked(), checkBox9.isChecked(), checkBox10.isChecked(), etCustom.getText().toString(),
+                Integer.parseInt(tvMinutes.getText().toString()));
 
         mFirebaseDatabase.child("users").child(mFireBaseUserId).setValue(user);
     }

@@ -9,18 +9,65 @@ package com.abe.robert.timesink;
 
 public class User {
 
-    private boolean checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6;
+    private boolean checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8, checkbox9, checkbox10;
+    private String custom;
     private int minutes;
 
     public User(boolean checkbox1, boolean checkbox2, boolean checkbox3, boolean checkbox4,
-                boolean checkbox5, boolean checkbox6, int minutes) {
+                boolean checkbox5, boolean checkbox6, boolean checkbox7, boolean checkbox8,
+                boolean checkbox9, boolean checkbox10, String custom, int minutes) {
         this.checkbox1 = checkbox1;
         this.checkbox2 = checkbox2;
         this.checkbox3 = checkbox3;
         this.checkbox4 = checkbox4;
         this.checkbox5 = checkbox5;
         this.checkbox6 = checkbox6;
+        this.checkbox3 = checkbox7;
+        this.checkbox4 = checkbox8;
+        this.checkbox5 = checkbox9;
+        this.checkbox6 = checkbox10;
+        this.custom = custom;
         this.minutes = minutes;
+    }
+
+    public boolean isCheckbox7() {
+        return checkbox7;
+    }
+
+    public void setCheckbox7(boolean checkbox7) {
+        this.checkbox7 = checkbox7;
+    }
+
+    public boolean isCheckbox8() {
+        return checkbox8;
+    }
+
+    public void setCheckbox8(boolean checkbox8) {
+        this.checkbox8 = checkbox8;
+    }
+
+    public boolean isCheckbox9() {
+        return checkbox9;
+    }
+
+    public void setCheckbox9(boolean checkbox9) {
+        this.checkbox9 = checkbox9;
+    }
+
+    public boolean isCheckbox10() {
+        return checkbox10;
+    }
+
+    public void setCheckbox10(boolean checkbox10) {
+        this.checkbox10 = checkbox10;
+    }
+
+    public String getCustom() {
+        return custom;
+    }
+
+    public void setCustom(String custom) {
+        this.custom = custom;
     }
 
     public boolean isCheckbox1() {
