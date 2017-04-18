@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // constant private strings
     private static final String TAG = "MainActivity.java";
-    private final String SERVER_CLIENT_ID = "599202828976-d1921squujdnk28tee49multc6p2n9ks.apps.googleusercontent.com";
 
     // layout variables
     private SeekBar seekBar;
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (checkBox5.isChecked()) list.add(checkBox5.getText().toString());
         if (checkBox6.isChecked()) list.add(checkBox6.getText().toString());
 
-        return (list.get(0) == null) ? null : list;
+        return (list.isEmpty()) ? null : list;
     }
 
     @Override

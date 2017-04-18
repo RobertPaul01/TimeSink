@@ -169,6 +169,37 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/checkBox7"
+                app:buttonTint="@color/colorTextPrimary"
+                android:textColor="@color/colorTextPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/checkbox7" />
+
+            <CheckBox
+                android:id="@+id/checkBox8"
+                app:buttonTint="@color/colorTextPrimary"
+                android:textColor="@color/colorTextPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/checkbox8" />
+
+            <CheckBox
+                android:id="@+id/checkBox9"
+                app:buttonTint="@color/colorTextPrimary"
+                android:textColor="@color/colorTextPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/checkbox9" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <Button

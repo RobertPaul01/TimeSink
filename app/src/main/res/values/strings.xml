@@ -11,7 +11,10 @@
     <string name="checkbox4">Health</string>
     <string name="checkbox5">Science</string>
     <string name="checkbox6">Lectures</string>
-    <string name="interests">Pop Science</string>
+    <string name="checkbox7">Computers</string>
+    <string name="checkbox8">Comedy</string>
+    <string name="checkbox9">Documentary</string>
+    <string name="interests">Interests</string>
     <string name="whysignin">Signing in to Time Sink allows us \nto keep track of your interests across devices</string>
     <string name="logout">Sign out</string>
 </resources>

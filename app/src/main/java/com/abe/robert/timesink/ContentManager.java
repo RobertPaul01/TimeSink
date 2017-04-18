@@ -14,13 +14,15 @@ import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoContentDetails;
 import com.google.api.services.youtube.model.VideoListResponse;
+import com.google.api.services.youtube.model.VideoSnippet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -43,10 +45,11 @@ public class ContentManager {
 
     // Video data
     private static final long NUMBER_OF_VIDEOS_RETURNED = 50;
-    private List<String> videoIds;
-    private Stack<String> prevVideoIds;
+    private Stack<VideoData> videoIds;
 
-    private ContentManager() {}
+    private ContentManager() {
+        videoIds = new Stack<>();
+    }
 
     public static ContentManager getInstance() {
         if (instance == null)
@@ -54,31 +57,19 @@ public class ContentManager {
         return instance;
     }
 
-    public String getNextVideo(String prevId) {
-        if (videoIds.size() == 0) {
-            // TODO Goto next page of search
-            Log.d(TAG, "out of videos");
+    public VideoData getNextVideo() {
+        if (videoIds.empty()) {
+            // TODO This will crash for now
             return null;
         }
-        prevVideoIds.push(prevId);
-        int ranIndx = new Random().nextInt(videoIds.size());
-        String videoStr = videoIds.get(ranIndx);
-        videoIds.remove(ranIndx);
-        return videoStr;
-    }
-
-    public String getPrevVideo() {
-        if (prevVideoIds.size() == 0) {
-            return null;
-        }
-        return prevVideoIds.pop();
+        VideoData vD = videoIds.pop();
+        return vD;
     }
 
     public void makeQuery(int durataion, String terms) {
         try {
-            videoIds = new ArrayList<>();
-            prevVideoIds = new Stack<>();
             new YouTubeQuery(durataion, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
+            Collections.shuffle(videoIds);
         } catch (InterruptedException e) {
             Log.d(TAG, "makeQuery() InterruptedException");
         } catch (ExecutionException e) {
@@ -104,6 +95,9 @@ public class ContentManager {
         @Override
         protected String doInBackground(String... params) {
             try {
+                // Recreate the stack
+                videoIds = new Stack<>();
+
                 YouTube youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
@@ -138,6 +132,7 @@ public class ContentManager {
                 List<SearchResult> searchResultList = searchResponse.getItems();
                 if (searchResultList == null) {
                     // TODO
+                    Log.e(TAG, "searchResults are null");
                 }
 
                 List<String> searchVideoIds = new ArrayList<>();
@@ -152,13 +147,16 @@ public class ContentManager {
 
                     YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet, contentDetails").setId(videoId);
                     VideoListResponse listResponse = listVideosRequest.execute();
-
                     List<Video> videoList = listResponse.getItems();
+                    //debugPrint(videoList.iterator());
                     for (Video video : videoList) {
-                        String durationStr = video.getContentDetails().getDuration();
+                        VideoSnippet snip = video.getSnippet();
+                        VideoContentDetails contentDetails = video.getContentDetails();
+                        String durationStr = contentDetails.getDuration();
                         int minInt = Integer.parseInt(durationStr.substring(2, durationStr.indexOf('M')));
                         if (minInt <= duration+2 && minInt >= duration-2) {
-                            videoIds.add(video.getId());
+                            VideoData data = new VideoData(video.getId(), snip.getTitle(), snip.getDescription());
+                            videoIds.add(data);
                         }
                     }
                 }
@@ -189,10 +187,10 @@ public class ContentManager {
 
                 Log.d(TAG, " Video Id" + rId);
                 Log.d(TAG, " Title: " + singleVideo.getSnippet().getTitle());
+                Log.d(TAG, " Audio Language: " + singleVideo.getSnippet().getLocalized());
                 Log.d(TAG, " Duration: " + singleVideo.getContentDetails().getDuration());
                 Log.d(TAG, "\n-------------------------------------------------------------\n");
             }
         }
     }
-
 }

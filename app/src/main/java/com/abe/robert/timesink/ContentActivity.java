@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -31,13 +33,13 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     private int contentTime;
     private ArrayList<String> queryTerms;
 
-    // Current video ID
-    private String currentId;
-
     // UI views
     private YouTubePlayer youTubePlayer;
     private Button nextButton;
-    private Button prevButton;
+    private TextView desc;
+
+    // Current video data
+    private VideoData curData;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -46,8 +48,6 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         setContentView(R.layout.activity_content);
 
         nextButton = (Button) findViewById(R.id.bt_next);
-        prevButton = (Button) findViewById(R.id.bt_prev);
-
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,12 +55,8 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
             }
         });
 
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadPrevVideo();
-            }
-        });
+        desc = (TextView) findViewById(R.id.video_desc);
+        desc.setMovementMethod(new ScrollingMovementMethod());
 
         // Catch the content time from MainActivity intent
         Bundle b = getIntent().getExtras();
@@ -83,11 +79,13 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         }
 
         StringBuilder queryStr = new StringBuilder();
-        for (String term : queryTerms) {
-            queryStr.append(term).append("|");
+        if (queryTerms != null && !queryTerms.isEmpty()) {
+            for (String term : queryTerms) {
+                queryStr.append(term).append("|");
+            }
+            // Remove last logical OR symbol
+            queryStr.deleteCharAt(queryStr.length() - 1);
         }
-        // Remove last logical OR symbol
-        queryStr.deleteCharAt(queryStr.length()-1);
 
         ContentManager.getInstance().makeQuery(contentTime, queryStr.toString());
 
@@ -104,20 +102,9 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     }
 
     private void loadNextVideo() {
-        String nextId = ContentManager.getInstance().getNextVideo(currentId);
-        if (nextId != null) {
-            currentId = nextId;
-            youTubePlayer.loadVideo(nextId);
-        }
-    }
-
-    private void loadPrevVideo() {
-        // If prevVideo id is null, nothing should happen.
-        String prevId = ContentManager.getInstance().getPrevVideo();
-        if (prevId != null) {
-            currentId = prevId;
-            youTubePlayer.loadVideo(prevId);
-        }
+        curData = ContentManager.getInstance().getNextVideo();
+        desc.setText(curData.desc);
+        youTubePlayer.loadVideo(curData.videoId);
     }
 
     @Override
