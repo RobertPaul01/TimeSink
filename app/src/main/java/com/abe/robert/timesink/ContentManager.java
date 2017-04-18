@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +46,6 @@ public class ContentManager {
 
     // Video data
     private final long QUERY_SIZE = 50;
-    private final long SIZE_OF_STACK = 2;
     private Stack<VideoData> videoIds;
     private String nextPage;
 
@@ -73,9 +71,8 @@ public class ContentManager {
     public VideoData makeQuery(int duration, String terms) {
         try {
             videoIds = new Stack<>();
-            //while (videoIds.size() < SIZE_OF_STACK) {
-                new YouTubeQuery(duration, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
-            //}
+            new YouTubeQuery(duration, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
+            Log.d(TAG,  "After query videoIds.size() = " + videoIds.size());
             Collections.shuffle(videoIds);
             return getNextVideo(duration, terms);
         } catch (InterruptedException e) {
@@ -128,7 +125,7 @@ public class ContentManager {
                 search.setSafeSearch("strict");
                 search.setTopicId("/m/01k8wb");
 
-                // set page token
+                // Set page token
                 if (nextPage != null)
                     search.setPageToken(nextPage);
 
@@ -139,20 +136,18 @@ public class ContentManager {
 
                 // Call the API and print results.
                 SearchListResponse searchResponse = search.execute();
-
                 nextPage = searchResponse.getNextPageToken();
-                Log.d(TAG, "getNextPageToken() = " + nextPage + " videoIds.size() = " + videoIds.size());
 
                 List<SearchResult> searchResultList = searchResponse.getItems();
                 if (searchResultList == null) {
-                    // TODO
                     Log.e(TAG, "searchResults are null");
+                    return null;
                 }
 
                 List<String> searchVideoIds = new ArrayList<>();
 
+                // Merge video IDs
                 if (searchResultList != null) {
-                    // Merge video IDs
                     for (SearchResult searchResult : searchResultList) {
                         searchVideoIds.add(searchResult.getId().getVideoId());
                     }
@@ -162,15 +157,17 @@ public class ContentManager {
                     YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet, contentDetails").setId(videoId);
                     VideoListResponse listResponse = listVideosRequest.execute();
                     List<Video> videoList = listResponse.getItems();
-                    //debugPrint(videoList.iterator());
 
+                    // Look for videos of acceptable duration
                     for (Video video : videoList) {
                         VideoSnippet snip = video.getSnippet();
                         VideoContentDetails contentDetails = video.getContentDetails();
                         String durationStr = contentDetails.getDuration();
                         int minInt = Integer.parseInt(durationStr.substring(2, durationStr.indexOf('M')));
+
+                        // TODO If no M in the durationStr, need to do something else
                         if (minInt == -1) {
-                            minInt = Integer.parseInt(durationStr.substring(durationStr.indexOf('H')));
+                            minInt = Integer.parseInt(durationStr.substring(durationStr.indexOf('H')+1));
                         }
                         if (minInt <= duration + (duration/4) && minInt >= duration - (duration/4)) {
                             VideoData data = new VideoData(video.getId(), snip.getTitle(), snip.getDescription());
