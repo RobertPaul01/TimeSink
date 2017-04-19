@@ -54,7 +54,7 @@ public class ContentManager {
     private ArrayList<VideoData> likedVideoData;
 
     // Set of seen page tokens
-    public static ContentActivityDelegate delegate;
+    public static ContentActivity delegate;
 
     private ContentManager() {
         videoIds = new Stack<>();

@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *
  * Created by Robby on 4/4/17.
  */
-public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener, ContentActivityDelegate {
+public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
 
     // Logging tag
     private static final String TAG = "ContentActivity.java";
@@ -34,7 +34,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     private ArrayList<String> queryTerms;
 
     // UI views
-    private YouTubePlayer youTubePlayer;
+    public YouTubePlayer youTubePlayer;
     private Button nextButton;
     private ImageButton thumbsDown, thumbsUp;
     private TextView desc;
@@ -190,12 +190,12 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         }
     }
 
-    @Override
     public void loadVideoId(VideoData vD) {
         curData = vD;
         desc.setText(curData.desc);
         desc.setScrollY(0);
-        youTubePlayer.loadVideo(curData.videoId);
+        if (youTubePlayer != null)
+            youTubePlayer.loadVideo(curData.videoId);
         if(MainActivity.dislikes.contains(curData.getVideoId())) {
             thumbsDown.setImageResource(R.drawable.ic_thumb_down_white_36dp);
             thumbsDown.setSelected(true);
@@ -205,8 +205,11 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
             thumbsUp.setSelected(true);
         }
     }
-}
 
-interface ContentActivityDelegate {
-    void loadVideoId(VideoData vidId);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (youTubePlayer != null)
+            youTubePlayer.release();
+    }
 }
