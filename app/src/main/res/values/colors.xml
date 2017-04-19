@@ -5,7 +5,7 @@
     <color name="colorAccent">#b5d98c</color>
     <color name="colorLightPrimary">#BBDEFB</color>
     <color name="colorTextSecondary">#212121</color>
-    <color name="secondaryTextColor">#757575</color>
+    <!--<color name="secondaryTextColor">#757575</color>-->
     <color name="dividerColor">#BDBDBD</color>
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="notWhite">#fcfcfc</color>

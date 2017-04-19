@@ -57,9 +57,9 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
             @Override
             public void onClick(View view) {
                 thumbsDown.setSelected(false);
-                thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
+                thumbsDown.setImageResource(R.drawable.ic_thumb_down_black_36dp);
                 thumbsUp.setSelected(false);
-                thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
+                thumbsUp.setImageResource(R.drawable.ic_thumb_up_black_36dp);
                 loadNextVideo();
             }
         });
@@ -71,16 +71,16 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
                 String id = curData.getVideoId();
                 // already selected, deselect
                 if(thumbsDown.isSelected()) {
-                    thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
+                    thumbsDown.setImageResource(R.drawable.ic_thumb_down_black_36dp);
                     thumbsDown.setSelected(false);
                     MainActivity.dislikes.remove(id);
                     MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).getRef().removeValue(); //remove from database
                 }
                 else {
-                    thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
+                    thumbsDown.setImageResource(R.drawable.ic_thumb_down_white_36dp);
                     thumbsDown.setSelected(true);
                     if(thumbsUp.isSelected()) {
-                        thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
+                        thumbsUp.setImageResource(R.drawable.ic_thumb_up_black_36dp);
                         thumbsUp.setSelected(false);
                     }
                     MainActivity.dislikes.add(id);
@@ -97,17 +97,17 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
                 String id = curData.getVideoId();
                 // already selected, deselect
                 if(thumbsUp.isSelected()) {
-                    thumbsUp.setImageResource(R.drawable.thumbs_up_unselected);
+                    thumbsUp.setImageResource(R.drawable.ic_thumb_up_black_36dp);
                     thumbsUp.setSelected(false);
                     MainActivity.likes.remove(id); //remove from local likes
                     MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child(id).getRef().removeValue(); //remove from database
                 }
                 // not selected, add to likes
                 else {
-                    thumbsUp.setImageResource(R.drawable.thumbs_up_selected);
+                    thumbsUp.setImageResource(R.drawable.ic_thumb_up_white_36dp);
                     thumbsUp.setSelected(true);
                     if(thumbsDown.isSelected()) {
-                        thumbsDown.setImageResource(R.drawable.thumbs_down_unselected);
+                        thumbsDown.setImageResource(R.drawable.ic_thumb_down_black_36dp);
                         thumbsDown.setSelected(false);
                     }
                     MainActivity.likes.add(id);
@@ -178,11 +178,11 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         desc.setScrollY(0);
         youTubePlayer.loadVideo(curData.videoId);
         if(MainActivity.dislikes.contains(curData.getVideoId())) {
-            thumbsDown.setImageResource(R.drawable.thumbs_down_selected);
+            thumbsDown.setImageResource(R.drawable.ic_thumb_down_white_36dp);
             thumbsDown.setSelected(true);
         }
         else if(MainActivity.likes.contains(curData.getVideoId())) {
-            thumbsUp.setImageResource(R.drawable.thumbs_up_selected);
+            thumbsUp.setImageResource(R.drawable.ic_thumb_up_white_36dp);
             thumbsUp.setSelected(true);
         }
     }

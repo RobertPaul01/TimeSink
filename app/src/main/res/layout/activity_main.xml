@@ -13,16 +13,16 @@
 
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="@+id/sb_minute_slider"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/linearLayout2"
         app:layout_constraintRight_toLeftOf="@+id/tv_interests"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp">
+        android:layout_marginRight="8sp"
+        android:layout_marginEnd="8sp">
 
         <ImageView
             android:id="@+id/imageView"
@@ -40,22 +40,22 @@
         android:clickable="true"
         app:fabSize="normal"
         app:srcCompat="@color/colorAccent"
-        android:layout_marginRight="12dp"
+        android:layout_marginRight="12sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="32sp"
         android:src="@drawable/bubbles_icon"
-        android:layout_marginEnd="12dp" />
+        android:layout_marginEnd="12sp" />
 
     <!--<Button-->
         <!--android:id="@+id/b_Sink"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="32dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginBottom="32sp"-->
+        <!--android:layout_marginEnd="8sp"-->
+        <!--android:layout_marginLeft="8sp"-->
+        <!--android:layout_marginRight="8sp"-->
+        <!--android:layout_marginStart="8sp"-->
         <!--android:background="@color/colorAccent"-->
         <!--android:text="@string/sink"-->
         <!--app:layout_constraintBottom_toBottomOf="parent"-->
@@ -64,17 +64,17 @@
         <!--app:layout_constraintRight_toRightOf="parent" />-->
 
     <!--<LinearLayout-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_marginTop="0dp"-->
-        <!--android:layout_marginRight="0dp"-->
+        <!--android:layout_width="0sp"-->
+        <!--android:layout_height="0sp"-->
+        <!--android:layout_marginTop="0sp"-->
+        <!--android:layout_marginRight="0sp"-->
         <!--app:layout_constraintRight_toRightOf="parent"-->
         <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--android:layout_marginBottom="0dp"-->
+        <!--android:layout_marginBottom="0sp"-->
         <!--app:layout_constraintTop_toBottomOf="@+id/sb_minute_slider"-->
         <!--app:layout_constraintVertical_bias="0.0"-->
         <!--app:layout_constraintLeft_toRightOf="@+id/tv_interests"-->
-        <!--android:layout_marginLeft="0dp">-->
+        <!--android:layout_marginLeft="0sp">-->
 
         <!--<ImageView-->
             <!--android:layout_width="match_parent"-->
@@ -88,18 +88,18 @@
         android:layout_height="wrap_content"
         android:text="@string/timeAvailable"
         android:fontFamily="sans-serif"
-        android:textSize="25dp"
-        android:layout_marginRight="8dp"
+        android:textSize="25sp"
+        android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="8sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="48sp"
         android:id="@+id/tv_how_much_time"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8sp"
+        android:layout_marginEnd="8sp"
         app:layout_constraintHorizontal_bias="0.507"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="8sp"
         app:layout_constraintBottom_toTopOf="@+id/sb_minute_slider"
         app:layout_constraintVertical_bias="0.56" />
 
@@ -108,16 +108,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1"
-        android:textSize="56dp"
-        android:layout_marginRight="8dp"
+        android:textSize="56sp"
+        android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="8sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8sp"
+        android:layout_marginEnd="8sp"
+        android:layout_marginBottom="8sp"
         app:layout_constraintBottom_toTopOf="@+id/sb_minute_slider"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="8sp"
         app:layout_constraintTop_toBottomOf="@+id/tv_how_much_time" />
 
     <TextView
@@ -125,32 +125,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="min"
-        android:textSize="32dp"
+        android:textSize="32sp"
         android:textStyle="bold"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/tv_time_counter"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="8sp"
         app:layout_constraintHorizontal_bias="0.084"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8sp"
+        android:layout_marginEnd="8sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_time_counter"
-        android:layout_marginBottom="7dp" />
+        android:layout_marginBottom="7sp" />
 
     <SeekBar
         android:id="@+id/sb_minute_slider"
-        android:layout_width="0dp"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:layout_marginLeft="48dp"
-        android:layout_marginRight="48dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48sp"
+        android:layout_marginLeft="48sp"
+        android:layout_marginRight="48sp"
+        android:layout_marginStart="48sp"
+        android:layout_marginTop="8sp"
         android:max="29"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="8sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.39" />
 
@@ -158,16 +158,16 @@
         android:id="@+id/tv_interests"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8sp"
+        android:layout_marginRight="8sp"
         android:text="@string/interests"
-        android:textSize="48dp"
+        android:textSize="48sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8sp"
+        android:layout_marginEnd="8sp"
         app:layout_constraintHorizontal_bias="0.502"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="16sp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout" />
 
     <LinearLayout
@@ -175,16 +175,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16sp"
+        android:layout_marginEnd="8sp"
+        android:layout_marginLeft="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="8sp"
         app:layout_constraintTop_toBottomOf="@+id/sb_minute_slider"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8sp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -283,7 +283,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
@@ -315,8 +315,8 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8sp"
+        android:layout_marginLeft="8sp"
         app:layout_constraintLeft_toLeftOf="parent">
 
         <ImageView
@@ -340,11 +340,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="8sp"
+        android:layout_marginRight="8sp"
         app:layout_constraintRight_toRightOf="parent"
         android:gravity="center_horizontal"
-        android:layout_marginEnd="8dp">
+        android:layout_marginEnd="8sp">
 
         <ImageView
             android:id="@+id/iv_video"

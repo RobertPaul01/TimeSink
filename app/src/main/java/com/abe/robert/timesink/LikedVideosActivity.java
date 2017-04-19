@@ -73,10 +73,9 @@ public class LikedVideosActivity extends AppCompatActivity implements YouTubePla
                     itemsAdapter.remove(new VideoData(curVideo.videoId, null, null)/* VideoData object that relates to currently playing video */);
                     itemsAdapter.notifyDataSetChanged();
                     youTubePlayer.pause();
-                    if (!likes.isEmpty()) {
-                        youTubePlayer.loadVideo(likes.get(0).getVideoId());
+                    if (likes.isEmpty()) {
+                        finish();
                     }
-                    else finish();
                 }
             }
         });
