@@ -40,9 +40,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_margin="8dp"
-        android:background="@android:drawable/divider_horizontal_dark"/>
+        android:background="@color/divider"/>
 
     <ListView
         android:id="@+id/lv_videos"
