@@ -218,8 +218,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tv_video:
             case R.id.iv_video:
-                i = new Intent(MainActivity.this, LikedVideosActivity.class);
-                startActivity(i);
+                if(!likes.isEmpty()) {
+                    i = new Intent(MainActivity.this, LikedVideosActivity.class);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(this, "You don't have any videos saved to your likes", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

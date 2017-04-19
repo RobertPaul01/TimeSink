@@ -27,7 +27,7 @@
             android:src="@drawable/thumbs_down_unselected"
             android:clickable="true" />
 
-        <Space android:layout_width="@dimen/activity_horizontal_margin"
+        <Space android:layout_width="48dp"
             android:layout_height="wrap_content"/>
 
         <Button
@@ -37,7 +37,7 @@
             android:background="@color/colorAccent"
             android:text="Next" />
 
-        <Space android:layout_width="@dimen/activity_horizontal_margin"
+        <Space android:layout_width="48dp"
             android:layout_height="wrap_content"/>
 
         <ImageButton

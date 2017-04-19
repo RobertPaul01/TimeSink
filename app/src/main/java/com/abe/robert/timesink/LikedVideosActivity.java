@@ -67,10 +67,17 @@ public class LikedVideosActivity extends AppCompatActivity implements YouTubePla
             @Override
             public void onClick(View v) {
                 //TODO update with correct ids/objects
-                MainActivity.likes.remove(curVideo.videoId); //remove from local likes
-                MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child(curVideo.videoId/* replace with current video id*/ ).getRef().removeValue(); //remove from database
-                itemsAdapter.remove(new VideoData(curVideo.videoId, null, null)/* VideoData object that relates to currently playing video */);
-                itemsAdapter.notifyDataSetChanged();
+                if(youTubePlayer.isPlaying()) {
+                    MainActivity.likes.remove(curVideo.videoId); //remove from local likes
+                    MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child(curVideo.videoId/* replace with current video id*/).getRef().removeValue(); //remove from database
+                    itemsAdapter.remove(new VideoData(curVideo.videoId, null, null)/* VideoData object that relates to currently playing video */);
+                    itemsAdapter.notifyDataSetChanged();
+                    youTubePlayer.pause();
+                    if (!likes.isEmpty()) {
+                        youTubePlayer.loadVideo(likes.get(0).getVideoId());
+                    }
+                    else finish();
+                }
             }
         });
 
