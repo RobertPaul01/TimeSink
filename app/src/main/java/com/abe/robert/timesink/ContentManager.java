@@ -97,9 +97,8 @@ public class ContentManager {
     }
 
     public void makeQuery(int duration, String terms) {
-        //videoIds = new Stack<>();
+        videoIds = new Stack<>();
         new YouTubeQuery(duration, terms).execute();
-        Log.d(TAG,  "After query videoIds.size() = " + videoIds.size());
     }
 
     private class YouTubeQuery extends AsyncTask<String, Void, String> {
@@ -205,9 +204,11 @@ public class ContentManager {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Collections.shuffle(videoIds);
-            if (!videoIds.empty())
+            Log.d(TAG,  "After query videoIds.size() = " + videoIds.size());
+            if (!videoIds.empty()) {
+                Collections.shuffle(videoIds);
                 delegate.loadVideoId(videoIds.pop());
+            }
         }
     }
 
