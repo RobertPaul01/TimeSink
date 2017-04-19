@@ -7,7 +7,7 @@
 
     <fragment
         android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
-        android:id="@+id/youtube_fragment"
+        android:id="@+id/youtube_fragment_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

@@ -47,4 +47,15 @@ public class VideoData {
                 ", desc='" + desc + '\'' +
                 '}';
     }
+
+    @Override
+    public int hashCode() {
+        return videoId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        VideoData oVD = (VideoData) obj;
+        return videoId.equals(oVD.videoId);
+    }
 }

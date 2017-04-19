@@ -31,7 +31,7 @@ public class VideoAdapter extends ArrayAdapter<VideoData> implements View.OnClic
         TextView tvLength = (TextView) convertView.findViewById(R.id.desc);
         // Populate the data into the template view using the data object
         tvTitle.setText(video.getTitle());
-        tvLength.setText(video.getDesc());
+        //tvLength.setText(video.getDesc().substring(0, 200));
 
         return convertView;
     }
