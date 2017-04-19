@@ -26,7 +26,7 @@
             android:id="@+id/bt_remove"
             android:padding="6sp"
             android:text="@string/click_remove"
-            android:textColor="@color/colorTextSecondary"
+            android:textColor="@color/notWhite"
             android:background="@color/colorAccent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +38,11 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="8dp"
+        android:background="@android:drawable/divider_horizontal_dark"/>
 
     <ListView
         android:id="@+id/lv_videos"
@@ -49,8 +54,8 @@
         android:paddingTop="8sp"
         android:paddingRight="8sp"
         android:paddingLeft="8sp"
-        android:dividerHeight="10sp"
-        android:divider="@android:color/transparent"/>
+        android:paddingBottom="128sp"
+        android:clipToPadding="false"/>
 
 
 </LinearLayout>

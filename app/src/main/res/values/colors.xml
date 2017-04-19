@@ -7,6 +7,6 @@
     <color name="colorTextSecondary">#212121</color>
     <!--<color name="secondaryTextColor">#757575</color>-->
     <color name="dividerColor">#BDBDBD</color>
-    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextPrimary">#fcfcfc</color>
     <color name="notWhite">#fcfcfc</color>
 </resources>
