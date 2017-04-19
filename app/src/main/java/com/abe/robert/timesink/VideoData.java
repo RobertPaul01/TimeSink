@@ -38,4 +38,24 @@ public class VideoData {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    @Override
+    public String toString() {
+        return "VideoData{" +
+                "videoId='" + videoId + '\'' +
+                ", title='" + title + '\'' +
+                ", desc='" + desc + '\'' +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return videoId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        VideoData oVD = (VideoData) obj;
+        return videoId.equals(oVD.videoId);
+    }
 }
