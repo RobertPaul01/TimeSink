@@ -8,13 +8,17 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+
 import java.util.ArrayList;
 
 /**
  * Created by Abe on 4/18/2017.
  */
 
-public class LikedVideosActivity extends AppCompatActivity{
+public class LikedVideosActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
 
     public static final String TAG = "LikedVideosActivity";
 
@@ -25,6 +29,10 @@ public class LikedVideosActivity extends AppCompatActivity{
     ListView listView;
     Button btRemove;
 
+    // UI views
+    private YouTubePlayer youTubePlayer;
+    private VideoData curVideo;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,11 +40,10 @@ public class LikedVideosActivity extends AppCompatActivity{
         setContentView(R.layout.activity_liked_videos);
         likes = new ArrayList<>();
 
-        //TODO make requests to get video information for each of the video id's in MainActvitiy.likes
-        // likes.addAll() // set of VideoData objects created from requests
-        //TODO remove test code
-        likes.add(new VideoData("1234", "New Title", "New Description"));
-        likes.add(new VideoData("12345", "New Title2", "New Description2"));
+        ArrayList<VideoData> vDList = ContentManager.getInstance().findLikedVideos(MainActivity.likes);
+        if (vDList != null) {
+            likes.addAll(vDList);
+        }
 
         final VideoAdapter itemsAdapter = new VideoAdapter(this, likes);
 
@@ -48,8 +55,9 @@ public class LikedVideosActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long id) {
-                Log.d(TAG, "Items " +  likes.get(position).toString());
-                //TODO play video with id likes.get(position).getVideoId()
+                //Log.d(TAG, "Items " +  likes.get(position).toString());
+                curVideo = likes.get(position);
+                youTubePlayer.loadVideo(curVideo.videoId);
             }
 
         });
@@ -59,12 +67,25 @@ public class LikedVideosActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 //TODO update with correct ids/objects
-                MainActivity.likes.remove(123456/* replace with current video id*/ ); //remove from local likes
-                MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child("123456"/* replace with current video id*/ ).getRef().removeValue(); //remove from database
-                itemsAdapter.remove(new VideoData("1234", "New Title", "New Description")/* VideoData object that relates to currently playing video */);
+                MainActivity.likes.remove(curVideo.videoId); //remove from local likes
+                MainActivity.mFirebaseDatabase.child("videos").child(MainActivity.mFireBaseUserId).child(curVideo.videoId/* replace with current video id*/ ).getRef().removeValue(); //remove from database
+                itemsAdapter.remove(new VideoData(curVideo.videoId, null, null)/* VideoData object that relates to currently playing video */);
                 itemsAdapter.notifyDataSetChanged();
             }
         });
 
+        // Initialize the YouTubePlayerSupportFragment
+        YouTubePlayerSupportFragment youTubeFrag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_fragment_likes);
+        youTubeFrag.initialize(ContentManager.YOUTUBE_API_KEY, this);
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        this.youTubePlayer = youTubePlayer;
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+        Log.e(TAG, "Error initializing youtubeVie");
     }
 }
