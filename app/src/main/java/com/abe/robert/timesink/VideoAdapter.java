@@ -1,7 +1,6 @@
 package com.abe.robert.timesink;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ public class VideoAdapter extends ArrayAdapter<VideoData> implements View.OnClic
         TextView tvLength = (TextView) convertView.findViewById(R.id.desc);
         // Populate the data into the template view using the data object
         tvTitle.setText(video.getTitle());
+        tvLength.setText(video.getDesc());
 
         return convertView;
     }

@@ -21,7 +21,6 @@ import com.google.api.services.youtube.model.VideoSnippet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -233,10 +232,10 @@ public class ContentManager {
                 }).setYouTubeRequestInitializer(new YouTubeRequestInitializer(YOUTUBE_API_KEY)).setApplicationName("TimeSink").build();
 
                 // Define the API request for retrieving search results.
-                YouTube.Videos.List video = youtube.videos().list("id,snippet");
+                YouTube.Videos.List video = youtube.videos().list("id,snippet,contentDetails");
 
                 video.setId(vidId);
-                video.setFields("items(id,snippet)");
+                video.setFields("items(id,snippet,contentDetails)");
                 VideoListResponse videoResponse = video.execute();
 
                 List<Video> searchResultList = videoResponse.getItems();
@@ -248,7 +247,9 @@ public class ContentManager {
                 if (searchResultList != null) {
                     for (Video searchResult : searchResultList) {
                         VideoSnippet snip = searchResult.getSnippet();
-                        VideoData nD = new VideoData(searchResult.getId(), snip.getTitle(), snip.getDescription());
+                        String durationStr = searchResult.getContentDetails().getDuration();
+                        String min = durationStr.substring(2, durationStr.indexOf('M')) + " mins.";
+                        VideoData nD = new VideoData(searchResult.getId(), snip.getTitle(), min);
                         likedVideoData.add(nD);
                     }
                 }
