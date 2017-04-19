@@ -89,13 +89,15 @@ public class ContentManager {
     }
 
     public void getNextVideo(int duration, String terms) {
-        while (videoIds.empty()) {
+        if (videoIds.empty()) {
             makeQuery(duration, terms);
+        } else {
+            delegate.loadVideoId(videoIds.pop());
         }
     }
 
     public void makeQuery(int duration, String terms) {
-        videoIds = new Stack<>();
+        //videoIds = new Stack<>();
         new YouTubeQuery(duration, terms).execute();
         Log.d(TAG,  "After query videoIds.size() = " + videoIds.size());
     }
@@ -140,7 +142,7 @@ public class ContentManager {
                 search.setSafeSearch("strict");
                 search.setTopicId("/m/01k8wb");
 
-
+                Log.d(TAG, "Next page: " + nextPage);
                 // Set page token
                 if (nextPage != null)
                     search.setPageToken(nextPage);
