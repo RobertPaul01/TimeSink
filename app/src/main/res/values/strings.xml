@@ -17,4 +17,6 @@
     <string name="interests">Interests</string>
     <string name="whysignin">Signing in to Time Sink allows us \nto keep track of your interests across devices</string>
     <string name="logout">Sign out</string>
+    <string name="videos">Saved Videos</string>
+    <string name="click_remove">remove from likes</string>
 </resources>

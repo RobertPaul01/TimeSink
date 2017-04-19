@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // layout variables
     private SeekBar seekBar;
-    private TextView tvMinutes, tvLogout;
-    private ImageView ivLogout;
+    private TextView tvMinutes, tvLogout, tvVideo;
+    private ImageView ivLogout, ivVideos;
     private FloatingActionButton bSink;
     private CheckBox checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7,
             checkBox8, checkBox9, checkBox10;
@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvMinutes = (TextView) findViewById(R.id.tv_time_counter);
         etCustom = (EditText) findViewById(R.id.et_custom);
 
+        // buttons at top of screen
+        tvVideo = (TextView) findViewById(R.id.tv_video);
+        ivVideos = (ImageView) findViewById(R.id.iv_video);
+        tvVideo.setOnClickListener(this);
+        ivVideos.setOnClickListener(this);
         tvLogout = (TextView) findViewById(R.id.tv_logout);
         ivLogout = (ImageView) findViewById(R.id.iv_logout);
         tvLogout.setOnClickListener(this);
@@ -187,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        Intent i;
         switch (view.getId()) {
             case R.id.checkBox1:
             case R.id.checkBox2:
@@ -201,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 saveCheckBoxesToDatabase();
                 break;
             case R.id.b_Sink:
-                Intent i = new Intent(MainActivity.this, ContentActivity.class);
+                i = new Intent(MainActivity.this, ContentActivity.class);
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 i.putStringArrayListExtra(MainActivity.CHECK_BOXES, getChecked());
                 startActivity(i);
@@ -210,7 +216,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_logout:
                 signOut();
                 break;
-
+            case R.id.tv_video:
+            case R.id.iv_video:
+                i = new Intent(MainActivity.this, LikedVideosActivity.class);
+                startActivity(i);
+                break;
         }
     }
 

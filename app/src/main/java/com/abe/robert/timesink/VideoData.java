@@ -38,4 +38,13 @@ public class VideoData {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    @Override
+    public String toString() {
+        return "VideoData{" +
+                "videoId='" + videoId + '\'' +
+                ", title='" + title + '\'' +
+                ", desc='" + desc + '\'' +
+                '}';
+    }
 }
