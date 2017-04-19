@@ -53,6 +53,9 @@ public class ContentManager {
     // Liked video data
     private ArrayList<VideoData> likedVideoData;
 
+    // Set of seen page tokens
+    public static ContentActivityDelegate delegate;
+
     private ContentManager() {
         videoIds = new Stack<>();
     }
@@ -61,15 +64,6 @@ public class ContentManager {
         if (instance == null)
             instance = new ContentManager();
         return instance;
-    }
-
-    public VideoData getNextVideo(int duration, String terms) {
-        while (videoIds.empty()) {
-            // make query to load in data
-            makeQuery(duration, terms);
-        }
-        VideoData vD = videoIds.pop();
-        return vD;
     }
 
     public ArrayList<VideoData> findLikedVideos(HashSet<String> vidIds) {
@@ -94,21 +88,16 @@ public class ContentManager {
         return likedVideoData;
     }
 
-    public VideoData makeQuery(int duration, String terms) {
-        try {
-            videoIds = new Stack<>();
-            new YouTubeQuery(duration, terms).execute().get(10000L, TimeUnit.MILLISECONDS);
-            Log.d(TAG,  "After query videoIds.size() = " + videoIds.size());
-            Collections.shuffle(videoIds);
-            return getNextVideo(duration, terms);
-        } catch (InterruptedException e) {
-            Log.d(TAG, "makeQuery() InterruptedException");
-        } catch (ExecutionException e) {
-            Log.d(TAG, "makeQuery() ExecutionException");
-        } catch (TimeoutException e) {
-            Log.d(TAG, "makeQuery() TimeoutException");
+    public void getNextVideo(int duration, String terms) {
+        while (videoIds.empty()) {
+            makeQuery(duration, terms);
         }
-        return null;
+    }
+
+    public void makeQuery(int duration, String terms) {
+        videoIds = new Stack<>();
+        new YouTubeQuery(duration, terms).execute();
+        Log.d(TAG,  "After query videoIds.size() = " + videoIds.size());
     }
 
     private class YouTubeQuery extends AsyncTask<String, Void, String> {
@@ -151,6 +140,7 @@ public class ContentManager {
                 search.setSafeSearch("strict");
                 search.setTopicId("/m/01k8wb");
 
+
                 // Set page token
                 if (nextPage != null)
                     search.setPageToken(nextPage);
@@ -192,10 +182,8 @@ public class ContentManager {
                         int minInt = Integer.parseInt(durationStr.substring(2, durationStr.indexOf('M')));
 
                         // TODO If no M in the durationStr, need to do something else
-                        if (minInt == -1) {
-                            minInt = Integer.parseInt(durationStr.substring(durationStr.indexOf('H')+1));
-                        }
-                        if (minInt <= duration + (duration/4) && minInt >= duration - (duration/4)) {
+
+                        if (!MainActivity.dislikes.contains(video.getId()) && minInt <= duration + (duration/4) && minInt >= duration - (duration/4)) {
                             VideoData data = new VideoData(video.getId(), snip.getTitle(), snip.getDescription());
                             videoIds.add(data);
                         }
@@ -210,6 +198,14 @@ public class ContentManager {
                 t.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Collections.shuffle(videoIds);
+            if (!videoIds.empty())
+                delegate.loadVideoId(videoIds.pop());
         }
     }
 
