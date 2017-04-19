@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *
  * Created by Robby on 4/4/17.
  */
-public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener, ContentActivityDelegate {
+public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
 
     // Logging tag
     private static final String TAG = "ContentActivity.java";
@@ -162,12 +162,27 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     }
 
     private void startNewVideo() {
-        ContentManager.delegate = this;
-        ContentManager.getInstance().makeQuery(contentTime, queryStr);
+        curData = ContentManager.getInstance().makeQuery(contentTime, queryStr);
+        setPlayerData();
     }
 
     private void loadNextVideo() {
-        ContentManager.getInstance().getNextVideo(contentTime, queryStr);
+        curData = ContentManager.getInstance().getNextVideo(contentTime, queryStr.toString());
+        setPlayerData();
+    }
+
+    private void setPlayerData() {
+        desc.setText(curData.desc);
+        desc.setScrollY(0);
+        youTubePlayer.loadVideo(curData.videoId);
+        if(MainActivity.dislikes.contains(curData.getVideoId())) {
+            thumbsDown.setImageResource(R.drawable.ic_thumb_down_white_36dp);
+            thumbsDown.setSelected(true);
+        }
+        else if(MainActivity.likes.contains(curData.getVideoId())) {
+            thumbsUp.setImageResource(R.drawable.ic_thumb_up_white_36dp);
+            thumbsUp.setSelected(true);
+        }
     }
 
     @Override
@@ -189,24 +204,4 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
             this.finishAffinity();
         }
     }
-
-    @Override
-    public void loadVideoId(VideoData vD) {
-        curData = vD;
-        desc.setText(curData.desc);
-        desc.setScrollY(0);
-        youTubePlayer.loadVideo(curData.videoId);
-        if(MainActivity.dislikes.contains(curData.getVideoId())) {
-            thumbsDown.setImageResource(R.drawable.ic_thumb_down_white_36dp);
-            thumbsDown.setSelected(true);
-        }
-        else if(MainActivity.likes.contains(curData.getVideoId())) {
-            thumbsUp.setImageResource(R.drawable.ic_thumb_up_white_36dp);
-            thumbsUp.setSelected(true);
-        }
-    }
-}
-
-interface ContentActivityDelegate {
-    void loadVideoId(VideoData vidId);
 }
