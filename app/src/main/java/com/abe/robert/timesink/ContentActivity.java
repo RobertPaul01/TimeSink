@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *
  * Created by Robby on 4/4/17.
  */
-public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
+public class ContentActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener, ContentActivityDelegate {
 
     // Logging tag
     private static final String TAG = "ContentActivity.java";
@@ -34,7 +34,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     private ArrayList<String> queryTerms;
 
     // UI views
-    public YouTubePlayer youTubePlayer;
+    private YouTubePlayer youTubePlayer;
     private Button nextButton;
     private ImageButton thumbsDown, thumbsUp;
     private TextView desc;
@@ -169,7 +169,7 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
     private void loadNextVideo() {
         ContentManager.getInstance().getNextVideo(contentTime, queryStr);
     }
-    
+
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
         Toast.makeText(ContentActivity.this, "Youtube initialization failure!! " + youTubeInitializationResult, Toast.LENGTH_LONG).show();
@@ -190,12 +190,12 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
         }
     }
 
+    @Override
     public void loadVideoId(VideoData vD) {
         curData = vD;
         desc.setText(curData.desc);
         desc.setScrollY(0);
-        if (youTubePlayer != null)
-            youTubePlayer.loadVideo(curData.videoId);
+        youTubePlayer.loadVideo(curData.videoId);
         if(MainActivity.dislikes.contains(curData.getVideoId())) {
             thumbsDown.setImageResource(R.drawable.ic_thumb_down_white_36dp);
             thumbsDown.setSelected(true);
@@ -205,11 +205,8 @@ public class ContentActivity extends AppCompatActivity implements YouTubePlayer.
             thumbsUp.setSelected(true);
         }
     }
+}
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (youTubePlayer != null)
-            youTubePlayer.release();
-    }
+interface ContentActivityDelegate {
+    void loadVideoId(VideoData vidId);
 }
