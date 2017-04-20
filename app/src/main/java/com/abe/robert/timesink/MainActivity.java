@@ -203,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 saveCheckBoxesToDatabase();
                 break;
             case R.id.b_Sink:
+                saveCheckBoxesToDatabase();
                 i = new Intent(MainActivity.this, ContentActivity.class);
                 i.putExtra(MainActivity.CONTENT_TIME, tvMinutes.getText());
                 i.putStringArrayListExtra(MainActivity.CHECK_BOXES, getChecked());
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             0, etCustom.getText().toString().indexOf(" ")
                     ));
         }
-        etCustom.setText(etCustom.getText().toString().replaceAll(" ", "")); // remove any beginning whitespace
+        etCustom.setText(etCustom.getText().toString().replaceAll(" ", "").replaceAll("\n", "")); // remove any beginning whitespace
 
         User user = new User(checkBox1.isChecked(), checkBox2.isChecked(), checkBox3.isChecked(),
                 checkBox4.isChecked(), checkBox5.isChecked(), checkBox6.isChecked(), checkBox7.isChecked(),
