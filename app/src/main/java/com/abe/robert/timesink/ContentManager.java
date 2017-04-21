@@ -195,7 +195,7 @@ public class ContentManager {
                         if (minInt == -1) {
                             minInt = Integer.parseInt(durationStr.substring(durationStr.indexOf('H')+1));
                         }
-                        if (minInt <= duration + (duration/4) && minInt >= duration - (duration/4)) {
+                        if (!MainActivity.dislikes.contains(video.getId()) && minInt <= duration + (duration/4) && minInt >= duration - (duration/4)) {
                             VideoData data = new VideoData(video.getId(), snip.getTitle(), snip.getDescription());
                             videoIds.add(data);
                         }
